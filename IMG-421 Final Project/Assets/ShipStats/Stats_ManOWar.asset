@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9489d9b64fd3d8c4089362134dd8cd57, type: 3}
+  m_Name: Stats_ManOWar
+  m_EditorClassIdentifier: 
+  ShipClass: 2
+  DisplayName: 
+  MaxHealth: 300
+  ArmorDamageReduction: 0
+  CannonRange: 20
+  CannonDamage: 22
+  CannonFireRate: 1
+  CannonAccuracyCone: 10
+  ProjectileSpeed: 25
+  CannonCount: 8
+  MoveSpeed: 5
+  RotationSpeed: 60
+  SellValue: 400
+  PurchaseCost: 600
+  MaxCannonUpgrades: 5
+  MaxSpeedUpgrades: 5
+  MaxArmorUpgrades: 5
+  CannonDamagePerUpgrade: 5
+  CannonRangePerUpgrade: 3
+  CannonFireRatePerUpgrade: 0.15
+  MoveSpeedPerUpgrade: 0.5
+  HealthPerUpgrade: 25
+  DamageResistPerUpgrade: 0.04
