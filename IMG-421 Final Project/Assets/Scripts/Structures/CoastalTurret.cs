@@ -27,10 +27,12 @@ public class CoastalTurret : MonoBehaviour
 
     private float _currentHealth;
     private float _fireCooldown;
+    private Collider[] _ownerColliders;
 
     void Start()
     {
         _currentHealth = MaxHealth;
+        _ownerColliders = GetComponentsInChildren<Collider>();
         if (PlayerLayer.value == 0)
             PlayerLayer = LayerMask.GetMask("PlayerShip");
     }
@@ -86,11 +88,15 @@ public class CoastalTurret : MonoBehaviour
     {
         if (ProjectilePrefab == null) return;
         Transform origin = MuzzlePoint != null ? MuzzlePoint : transform;
-        Vector3 dir = (target.transform.position - origin.position).normalized;
+        Vector3 dir = target.transform.position - origin.position;
+        dir.y = 0f;
+        if (dir == Vector3.zero) return;
+        dir.Normalize();
 
-        GameObject projGO = Instantiate(ProjectilePrefab, origin.position, Quaternion.LookRotation(dir));
+        Vector3 spawnPos = origin.position + dir * 1.5f;
+        GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(dir));
         Projectile proj   = projGO.GetComponent<Projectile>();
-        proj?.Launch(dir * 22f, Damage, ShipFaction.Enemy);
+        proj?.Launch(dir * 22f, Damage, ShipFaction.Enemy, _ownerColliders);
     }
 
     // ── Damage ───────────────────────────────────────────────────────────────

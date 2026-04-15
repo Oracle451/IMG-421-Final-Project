@@ -21,10 +21,12 @@ public class CannonController : MonoBehaviour
 
     private ShipBase _ship;
     private float _fireCooldown;
+    private Collider[] _ownerColliders;
 
     void Awake()
     {
         _ship = GetComponentInParent<ShipBase>();
+        _ownerColliders = _ship != null ? _ship.GetComponentsInChildren<Collider>() : null;
         if (EnemyLayer.value == 0 && _ship != null)
         {
             string targetLayer = _ship.Faction == ShipFaction.Player ? "EnemyShip" : "PlayerShip";
@@ -48,6 +50,7 @@ public class CannonController : MonoBehaviour
         {
             Vector3 dir = (target.transform.position - mount.position).normalized;
             dir.y = 0f;
+            dir = dir.normalized;
             if (dir != Vector3.zero)
                 mount.rotation = Quaternion.Slerp(mount.rotation,
                     Quaternion.LookRotation(dir), 5f * Time.deltaTime);
@@ -95,22 +98,27 @@ public class CannonController : MonoBehaviour
                 ? CannonMounts[i % CannonMounts.Count]
                 : transform;
 
-            Vector3 baseDir = (target.transform.position - mount.position).normalized;
+            Vector3 baseDir = target.transform.position - mount.position;
+            baseDir.y = 0f;
+            if (baseDir == Vector3.zero) continue;
+            baseDir.Normalize();
 
-            // Apply accuracy cone spread
+            // Apply horizontal-only accuracy spread so cannonballs stay on the water plane.
             float halfCone = _ship.Stats.CannonAccuracyCone;
             Vector3 spread = Quaternion.Euler(
-                Random.Range(-halfCone, halfCone),
+                0f,
                 Random.Range(-halfCone, halfCone),
                 0f) * baseDir;
 
-            GameObject projGO = Instantiate(ProjectilePrefab, mount.position, Quaternion.LookRotation(spread));
+            Vector3 spawnPos = mount.position + spread * 1.5f;
+            GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(spread));
             Projectile proj   = projGO.GetComponent<Projectile>();
             if (proj != null)
             {
                 proj.Launch(spread * _ship.Stats.ProjectileSpeed,
                             _ship.EffectiveCannonDamage,
-                            _ship.Faction);
+                            _ship.Faction,
+                            _ownerColliders);
             }
         }
     }

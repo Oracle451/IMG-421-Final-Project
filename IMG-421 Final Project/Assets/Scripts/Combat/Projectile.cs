@@ -22,15 +22,33 @@ public class Projectile : MonoBehaviour
     private ShipFaction _ownerFaction;
     private Rigidbody   _rb;
     private bool        _hit;
+    private Collider[]  _ignoredColliders;
 
-    void Awake() => _rb = GetComponent<Rigidbody>();
+    void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _rb.useGravity = false;
+        _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+    }
 
     // ── Public API ────────────────────────────────────────────────────────────
 
-    public void Launch(Vector3 velocity, float damage, ShipFaction ownerFaction)
+    public void Launch(Vector3 velocity, float damage, ShipFaction ownerFaction, Collider[] ignoredColliders = null)
     {
         _damage       = damage;
         _ownerFaction = ownerFaction;
+        _ignoredColliders = ignoredColliders;
+
+        Collider projectileCollider = GetComponent<Collider>();
+        if (projectileCollider != null && _ignoredColliders != null)
+        {
+            foreach (Collider ignored in _ignoredColliders)
+            {
+                if (ignored != null)
+                    Physics.IgnoreCollision(projectileCollider, ignored, true);
+            }
+        }
+
         _rb.velocity  = velocity;
         Destroy(gameObject, Lifetime);
     }
