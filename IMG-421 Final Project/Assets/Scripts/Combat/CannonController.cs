@@ -13,6 +13,8 @@ public class CannonController : MonoBehaviour
 
     [Header("Projectile")]
     public GameObject ProjectilePrefab;
+    public float ProjectileSpawnForwardOffset = 1.5f;
+    public float ProjectileSpawnHeightOffset = 0.75f;
 
     [Header("Layer Masks")]
     public LayerMask EnemyLayer;
@@ -98,11 +100,16 @@ public class CannonController : MonoBehaviour
         int count = _ship.Stats.CannonCount;
         for (int i = 0; i < count; i++)
         {
-            Transform mount = (CannonMounts.Count > 0)
+            bool hasMount = CannonMounts.Count > 0;
+            Transform mount = hasMount
                 ? CannonMounts[i % CannonMounts.Count]
                 : transform;
 
-            Vector3 baseDir = target.transform.position - mount.position;
+            Vector3 origin = mount.position;
+            if (!hasMount)
+                origin += Vector3.up * ProjectileSpawnHeightOffset;
+
+            Vector3 baseDir = target.transform.position - origin;
             baseDir.y = 0f;
             if (baseDir == Vector3.zero) continue;
             baseDir.Normalize();
@@ -114,7 +121,9 @@ public class CannonController : MonoBehaviour
                 Random.Range(-halfCone, halfCone),
                 0f) * baseDir;
 
-            Vector3 spawnPos = mount.position + spread * 1.5f;
+            Vector3 spawnPos = origin
+                             + spread * ProjectileSpawnForwardOffset
+                             + Vector3.up * ProjectileSpawnHeightOffset;
             GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(spread));
             Projectile proj   = projGO.GetComponent<Projectile>();
             if (proj != null)

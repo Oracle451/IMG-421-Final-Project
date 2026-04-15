@@ -19,6 +19,8 @@ public class CoastalTurret : MonoBehaviour
     public Transform MuzzlePoint;
     public GameObject ProjectilePrefab;
     public GameObject ExplosionVFX;
+    public float ProjectileSpawnForwardOffset = 1.5f;
+    public float ProjectileSpawnHeightOffset = 0.5f;
 
     [Header("Layer Mask")]
     public LayerMask PlayerLayer;
@@ -88,12 +90,13 @@ public class CoastalTurret : MonoBehaviour
     {
         if (ProjectilePrefab == null) return;
         Transform origin = MuzzlePoint != null ? MuzzlePoint : transform;
-        Vector3 dir = target.transform.position - origin.position;
+        Vector3 launchOrigin = origin.position + Vector3.up * ProjectileSpawnHeightOffset;
+        Vector3 dir = target.transform.position - launchOrigin;
         dir.y = 0f;
         if (dir == Vector3.zero) return;
         dir.Normalize();
 
-        Vector3 spawnPos = origin.position + dir * 1.5f;
+        Vector3 spawnPos = launchOrigin + dir * ProjectileSpawnForwardOffset;
         GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(dir));
         Projectile proj   = projGO.GetComponent<Projectile>();
         proj?.Launch(dir * 22f, Damage, ShipFaction.Enemy, _ownerColliders);
