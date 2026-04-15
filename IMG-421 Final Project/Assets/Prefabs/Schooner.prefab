@@ -1090,9 +1090,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Stats: {fileID: 11400000, guid: 810c305dbdf1ef74b8ea656ee2e1fdb9, type: 2}
   Faction: 0
-  ShipName: Frigate
+  ShipName: Schooner
   ExplosionVFX: {fileID: 0}
   WakeTrail: {fileID: 0}
+  ModelRoot: {fileID: 0}
   BobAmplitude: 0.1
   BobFrequency: 1
 --- !u!114 &8191735537222875135
@@ -1108,6 +1109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StopDistance: 1.5
+  AlignmentAngleThreshold: 25
 --- !u!114 &6703419047148421825
 MonoBehaviour:
   m_ObjectHideFlags: 0

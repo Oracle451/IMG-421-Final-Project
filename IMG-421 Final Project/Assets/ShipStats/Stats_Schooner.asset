@@ -24,8 +24,8 @@ MonoBehaviour:
   CannonCount: 2
   MoveSpeed: 8
   RotationSpeed: 60
-  SellValue: 100
-  PurchaseCost: 150
+  SellValue: 75
+  PurchaseCost: 100
   MaxCannonUpgrades: 5
   MaxSpeedUpgrades: 5
   MaxArmorUpgrades: 5
