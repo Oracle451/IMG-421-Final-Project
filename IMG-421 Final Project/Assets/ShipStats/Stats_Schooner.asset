@@ -22,7 +22,7 @@ MonoBehaviour:
   CannonAccuracyCone: 10
   ProjectileSpeed: 25
   CannonCount: 2
-  MoveSpeed: 8
+  MoveSpeed: 10
   RotationSpeed: 60
   SellValue: 75
   PurchaseCost: 100

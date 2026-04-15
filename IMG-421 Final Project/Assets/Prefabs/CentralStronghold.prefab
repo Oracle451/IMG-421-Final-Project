@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7504204537266969793}
   - component: {fileID: 1721649073462979514}
   - component: {fileID: 2420731942417162246}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,6 +128,8 @@ MonoBehaviour:
   MuzzlePoint: {fileID: 0}
   ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
+  ProjectileSpawnForwardOffset: 1.5
+  ProjectileSpawnHeightOffset: 0.5
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -142,7 +144,7 @@ GameObject:
   - component: {fileID: 1954350061286501357}
   - component: {fileID: 4353688303787283389}
   - component: {fileID: 7495813821091759578}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CentralStronghold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +218,7 @@ GameObject:
   - component: {fileID: 6157260686870657584}
   - component: {fileID: 6312602464693399332}
   - component: {fileID: 4477042499607637280}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Turret (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,6 +333,8 @@ MonoBehaviour:
   MuzzlePoint: {fileID: 0}
   ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
+  ProjectileSpawnForwardOffset: 1.5
+  ProjectileSpawnHeightOffset: 0.5
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -346,7 +350,7 @@ GameObject:
   - component: {fileID: 2238333072064456712}
   - component: {fileID: 1447266662473060653}
   - component: {fileID: 1240231952262853413}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +456,7 @@ GameObject:
   - component: {fileID: 1740438381442084675}
   - component: {fileID: 8033655628001035463}
   - component: {fileID: 6984915097591282095}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Turret (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -567,6 +571,8 @@ MonoBehaviour:
   MuzzlePoint: {fileID: 0}
   ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
+  ProjectileSpawnForwardOffset: 1.5
+  ProjectileSpawnHeightOffset: 0.5
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -583,7 +589,7 @@ GameObject:
   - component: {fileID: 7355605451760088473}
   - component: {fileID: 934735988347904206}
   - component: {fileID: 1509246619759328823}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Turret (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,6 +704,8 @@ MonoBehaviour:
   MuzzlePoint: {fileID: 0}
   ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
+  ProjectileSpawnForwardOffset: 1.5
+  ProjectileSpawnHeightOffset: 0.5
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 64
