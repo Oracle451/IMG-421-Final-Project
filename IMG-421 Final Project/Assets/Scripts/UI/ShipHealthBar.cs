@@ -26,6 +26,8 @@ public class ShipHealthBar : MonoBehaviour
     {
         _ship = GetComponentInParent<ShipBase>();
         _cam  = Camera.main;
+        AutoWireReferences();
+        EnsureWorldSpaceCanvas();
 
         if (HealthSlider != null)
         {
@@ -56,5 +58,25 @@ public class ShipHealthBar : MonoBehaviour
         // Billboard — face camera
         if (FaceCamera && _cam != null)
             transform.rotation = _cam.transform.rotation;
+    }
+
+    void AutoWireReferences()
+    {
+        if (HealthSlider == null)
+            HealthSlider = GetComponentInChildren<Slider>(true);
+
+        if (FillImage == null && HealthSlider != null && HealthSlider.fillRect != null)
+            FillImage = HealthSlider.fillRect.GetComponent<Image>();
+    }
+
+    void EnsureWorldSpaceCanvas()
+    {
+        Canvas canvas = GetComponent<Canvas>();
+        RectTransform rect = GetComponent<RectTransform>();
+        if (canvas != null)
+            canvas.renderMode = RenderMode.WorldSpace;
+
+        if (rect != null && rect.localScale == Vector3.zero)
+            rect.localScale = Vector3.one * 0.01f;
     }
 }

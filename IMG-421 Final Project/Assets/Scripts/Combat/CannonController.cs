@@ -27,18 +27,22 @@ public class CannonController : MonoBehaviour
     {
         _ship = GetComponentInParent<ShipBase>();
         _ownerColliders = _ship != null ? _ship.GetComponentsInChildren<Collider>() : null;
-        if (EnemyLayer.value == 0 && _ship != null)
-        {
-            string targetLayer = _ship.Faction == ShipFaction.Player ? "EnemyShip" : "PlayerShip";
-            EnemyLayer = LayerMask.GetMask(targetLayer);
-        }
+        RefreshTargetLayer();
     }
 
     public void RefreshStats() { /* cannons re-read from ship stats each fire */ }
 
+    void RefreshTargetLayer()
+    {
+        if (_ship == null) return;
+        string targetLayer = _ship.Faction == ShipFaction.Player ? "EnemyShip" : "PlayerShip";
+        EnemyLayer = LayerMask.GetMask(targetLayer);
+    }
+
     void Update()
     {
         if (!_ship.IsAlive) return;
+        RefreshTargetLayer();
 
         _fireCooldown -= Time.deltaTime;
 

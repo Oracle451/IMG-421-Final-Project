@@ -18,6 +18,7 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     private float _healthMultiplier = 1f;
     private float _damageMultiplier = 1f;
+    private bool _isDying;
 
     public int CannonUpgradeLevel  { get; private set; }
     public int SpeedUpgradeLevel   { get; private set; }
@@ -95,7 +96,7 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     public virtual void TakeDamage(float rawDamage)
     {
-        if (!IsAlive) return;
+        if (!IsAlive || _isDying) return;
         float reduced = rawDamage * (1f - Mathf.Clamp01(EffectiveDR));
         CurrentHealth = Mathf.Max(0f, CurrentHealth - reduced);
 
@@ -140,8 +141,28 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     protected virtual void Die()
     {
+        if (_isDying) return;
+        _isDying = true;
+        CurrentHealth = 0f;
+
+        DisableGameplay();
+
         if (ExplosionVFX) Instantiate(ExplosionVFX, transform.position, Quaternion.identity);
-        OnShipDestroyed?.Invoke(this);
+
+        if (OnShipDestroyed != null)
+        {
+            foreach (Action<ShipBase> handler in OnShipDestroyed.GetInvocationList())
+            {
+                try
+                {
+                    handler(this);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex, this);
+                }
+            }
+        }
 
         if (Faction == ShipFaction.Player)
             GameManager.Instance?.PlayerFleet?.OnShipLost(this);
@@ -149,6 +170,31 @@ public class ShipBase : MonoBehaviour, IDamageable
             CurrencyManager.Instance?.AddCurrency(Mathf.RoundToInt(Stats.SellValue * 0.6f));
 
         Destroy(gameObject, 0.1f);
+    }
+
+    void DisableGameplay()
+    {
+        foreach (Collider col in GetComponentsInChildren<Collider>())
+            col.enabled = false;
+
+        foreach (Renderer rend in GetComponentsInChildren<Renderer>())
+            rend.enabled = false;
+
+        foreach (MonoBehaviour behaviour in GetComponents<MonoBehaviour>())
+        {
+            if (behaviour != this)
+                behaviour.enabled = false;
+        }
+
+        if (WakeTrail != null)
+            WakeTrail.emitting = false;
+
+        if (Rb != null)
+        {
+            Rb.velocity = Vector3.zero;
+            Rb.angularVelocity = Vector3.zero;
+            Rb.isKinematic = true;
+        }
     }
 
     void OnMouseDown()
