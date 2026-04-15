@@ -19,7 +19,7 @@ public class PlayerFleet : MonoBehaviour
     public int StartingShipCount = 1;
 
     [Header("Formation")]
-    public float FormationSpacing = 4f;
+    public float FormationSpacing = 15f;
 
     [Header("Move Indicator")]
     public GameObject MoveMarkerPrefab;

@@ -22,6 +22,8 @@ public class OceanWave : MonoBehaviour
     private Mesh _mesh;
     private Vector3[] _baseVertices;
     private Vector3[] _modifiedVertices;
+    private Color[] _colors;
+    public Color WaterColor = new Color(18f, 116f, 202f);
 
     void Start()
     {
@@ -29,6 +31,7 @@ public class OceanWave : MonoBehaviour
         _mesh.MarkDynamic();
         _baseVertices     = _mesh.vertices;
         _modifiedVertices = new Vector3[_baseVertices.Length];
+        _colors = new Color[_baseVertices.Length];
     }
 
     void Update()
@@ -47,9 +50,19 @@ public class OceanWave : MonoBehaviour
             float wz2   = (v.x * Mathf.Sin(dir) + v.z * Mathf.Cos(dir)) * Wave2Frequency + t * Wave2Speed;
             float wave2 = Mathf.PerlinNoise(wx2, wz2) * Wave2Height;
 
-            _modifiedVertices[i] = new Vector3(v.x, wave1 + wave2, v.z);
+            float height = wave1 + wave2;
+
+            _modifiedVertices[i] = new Vector3(v.x, height, v.z);
+
+            // Foam calculation
+            float foam = Mathf.InverseLerp(0.2f, 0.5f, height); 
+            foam = Mathf.Clamp01(foam);
+
+            // Blend blue to white
+            _colors[i] = Color.Lerp(WaterColor, Color.white, foam);
         }
 
+        _mesh.colors = _colors;
         _mesh.vertices = _modifiedVertices;
         _mesh.RecalculateNormals();
     }

@@ -1,10 +1,6 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// Core ship component. Holds runtime state (health, upgrades, faction).
-/// Attach to every ship prefab regardless of faction. Implements IDamageable.
-/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class ShipBase : MonoBehaviour, IDamageable
 {
@@ -40,13 +36,12 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     protected Rigidbody Rb;
 
-    // ── Bobbing ──────────────────────────────────────────────────────────────
+    // ── Bobbing — runs on the MODEL child, not the root Rigidbody ────────────
     [Header("Bobbing")]
+    public Transform ModelRoot;      // drag your mesh child here in Inspector
     public float BobAmplitude = 0.1f;
     public float BobFrequency = 1f;
     private float _bobOffset;
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
 
     protected virtual void Awake()
     {
@@ -61,13 +56,17 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     protected virtual void Update()
     {
-        _bobOffset += Time.deltaTime * BobFrequency;
-        Vector3 p = transform.position;
-        p.y = Mathf.Sin(_bobOffset) * BobAmplitude;
-        transform.position = p;
+        // Bob the visual model child up and down — never touch the root transform
+        if (ModelRoot != null)
+        {
+            _bobOffset += Time.deltaTime * BobFrequency;
+            Vector3 localPos = ModelRoot.localPosition;
+            localPos.y = Mathf.Sin(_bobOffset) * BobAmplitude;
+            ModelRoot.localPosition = localPos;
+        }
     }
 
-    // ── Zone Scaling ─────────────────────────────────────────────────────────
+    // ── Zone Scaling ──────────────────────────────────────────────────────────
 
     public void ScaleZoneStats(float healthMult, float damageMult)
     {
@@ -76,7 +75,7 @@ public class ShipBase : MonoBehaviour, IDamageable
         CurrentHealth     = EffectiveMaxHealth;
     }
 
-    // ── Damage / Heal ────────────────────────────────────────────────────────
+    // ── Damage / Heal ─────────────────────────────────────────────────────────
 
     public virtual void TakeDamage(float rawDamage)
     {
@@ -95,7 +94,7 @@ public class ShipBase : MonoBehaviour, IDamageable
         CurrentHealth = Mathf.Min(EffectiveMaxHealth, CurrentHealth + amount);
     }
 
-    // ── Upgrades ─────────────────────────────────────────────────────────────
+    // ── Upgrades ──────────────────────────────────────────────────────────────
 
     public bool CanUpgradeCannons => Stats != null && CannonUpgradeLevel < Stats.MaxCannonUpgrades;
     public bool CanUpgradeSpeed   => Stats != null && SpeedUpgradeLevel  < Stats.MaxSpeedUpgrades;
@@ -121,7 +120,7 @@ public class ShipBase : MonoBehaviour, IDamageable
         CurrentHealth = Mathf.Min(CurrentHealth + Stats.HealthPerUpgrade, EffectiveMaxHealth);
     }
 
-    // ── Death ────────────────────────────────────────────────────────────────
+    // ── Death ─────────────────────────────────────────────────────────────────
 
     protected virtual void Die()
     {
@@ -135,8 +134,6 @@ public class ShipBase : MonoBehaviour, IDamageable
 
         Destroy(gameObject, 0.1f);
     }
-
-    // ── Click Selection ───────────────────────────────────────────────────────
 
     void OnMouseDown()
     {

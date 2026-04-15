@@ -13,7 +13,6 @@ public class CannonController : MonoBehaviour
 
     [Header("Projectile")]
     public GameObject ProjectilePrefab;
-    public Transform MuzzlePoint;   // child of this GO or first cannon mount
 
     [Header("Layer Masks")]
     public LayerMask EnemyLayer;

@@ -156,7 +156,7 @@ MonoBehaviour:
   ManOWarPrefab: {fileID: 693869651391286636, guid: 63379446a8491a946b1e1ed58162fa7f, type: 3}
   StartingShipClass: 0
   StartingShipCount: 3
-  FormationSpacing: 4
+  FormationSpacing: 20
   MoveMarkerPrefab: {fileID: 6703199381905693918, guid: 93c86eb5b4bc20742bbf1aba152762ea, type: 3}
 --- !u!4 &2396339
 Transform:
@@ -340,12 +340,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WaveHeight: 0.4
-  WaveFrequency: 0.3
-  WaveSpeed: 0.5
+  WaveFrequency: 0.7
+  WaveSpeed: 0.1
   Wave2Height: 0.15
-  Wave2Frequency: 0.8
-  Wave2Speed: 0.9
+  Wave2Frequency: 0.5
+  Wave2Speed: 0.1
   Wave2Direction: 45
+  WaterColor: {r: 0, g: 0.3, b: 0.6, a: 1}
 --- !u!64 &85091393
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2430,8 +2431,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SmoothTime: 0.5
-  DefaultHeight: 30
-  MinHeight: 12
+  DefaultHeight: 50
+  MinHeight: 22
   MaxHeight: 60
   ZoomSpeed: 5
   ZoomOutHoldHeight: 55

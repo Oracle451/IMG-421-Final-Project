@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Steers a ship toward a destination using physics.
-/// Works for both player-commanded ships and AI-controlled ships.
-/// </summary>
 [RequireComponent(typeof(ShipBase))]
 [RequireComponent(typeof(Rigidbody))]
 public class ShipMovement : MonoBehaviour
@@ -11,11 +7,15 @@ public class ShipMovement : MonoBehaviour
     [Header("Tuning")]
     public float StopDistance = 1.5f;
 
+    // Ship won't thrust forward until it's within this many degrees of the target.
+    // Prevents the spinning-in-place issue on sharp turns.
+    public float AlignmentAngleThreshold = 25f;
+
     private ShipBase _ship;
     private Rigidbody _rb;
     private Vector3 _destination;
-    private Vector3 _currentVelocity;
     private bool _hasDestination;
+
     public System.Action OnDestinationReached;
 
     void Awake()
@@ -28,44 +28,52 @@ public class ShipMovement : MonoBehaviour
 
     public void SetDestination(Vector3 worldPos)
     {
-        _destination    = new Vector3(worldPos.x, transform.position.y, worldPos.z);
-        _hasDestination = true;
-        // Seed the smoothing buffer from current physics velocity so there's
-        // no lag spike when a new order arrives mid-move.
-        _currentVelocity = _rb.velocity;
+        _destination     = new Vector3(worldPos.x, transform.position.y, worldPos.z);
+        _hasDestination  = true;
     }
 
     public void ClearDestination() => _hasDestination = false;
 
-    public bool IsMoving => _hasDestination && Vector3.Distance(transform.position, _destination) > StopDistance;
+    public bool IsMoving => _hasDestination && 
+                            Vector3.Distance(transform.position, _destination) > StopDistance;
 
     void FixedUpdate()
     {
         if (!_hasDestination || !_ship.IsAlive) return;
 
-        Vector3 dir = (_destination - transform.position);
-        dir.y = 0f;
-        float dist = dir.magnitude;
+        Vector3 toTarget = _destination - transform.position;
+        toTarget.y = 0f;
+        float dist = toTarget.magnitude;
 
+        // Arrived
         if (dist <= StopDistance)
         {
+            // Brake to a stop smoothly
+            _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, 0.25f);
             OnDestinationReached?.Invoke();
             ClearDestination();
-            return; // CRITICAL: Stop executing here!
+            return;
         }
 
-        dir.Normalize();
+        Vector3 dir = toTarget.normalized;
 
-        // Rotate safely using the Rigidbody, not the Transform
+        // ── Rotation ─────────────────────────────────────────────────────────
         Quaternion targetRot = Quaternion.LookRotation(dir);
-        Quaternion newRot = Quaternion.RotateTowards(_rb.rotation, targetRot, _ship.Stats.RotationSpeed * Time.fixedDeltaTime);
-        _rb.MoveRotation(newRot); 
+        Quaternion newRot    = Quaternion.RotateTowards(
+            _rb.rotation, targetRot,
+            _ship.Stats.RotationSpeed * Time.fixedDeltaTime);
+        _rb.MoveRotation(newRot);
 
-        // Move forward (preserve existing Y velocity so gravity still works)
-        float speed = _ship.EffectiveMoveSpeed;
-        _currentVelocity = Vector3.Lerp(_rb.velocity, transform.forward * speed, 0.5f);
-        _currentVelocity.y = _rb.velocity.y; 
-        
-        _rb.velocity = _currentVelocity;
+        // ── Thrust — only when roughly facing the target ──────────────────────
+        float angleToTarget = Vector3.Angle(transform.forward, dir);
+        float alignment     = 1f - Mathf.Clamp01(angleToTarget / AlignmentAngleThreshold);
+        // alignment = 0 when >25° off, ramps to 1 when fully aligned
+        // This eliminates sideways/backward drift on sharp turns
+
+        float speed        = _ship.EffectiveMoveSpeed * alignment;
+        Vector3 targetVel  = transform.forward * speed;
+        targetVel.y        = _rb.velocity.y;  // preserve gravity
+
+        _rb.velocity = Vector3.Lerp(_rb.velocity, targetVel, 0.2f);
     }
 }
