@@ -25,6 +25,11 @@ public class CannonController : MonoBehaviour
     void Awake()
     {
         _ship = GetComponentInParent<ShipBase>();
+        if (EnemyLayer.value == 0 && _ship != null)
+        {
+            string targetLayer = _ship.Faction == ShipFaction.Player ? "EnemyShip" : "PlayerShip";
+            EnemyLayer = LayerMask.GetMask(targetLayer);
+        }
     }
 
     public void RefreshStats() { /* cannons re-read from ship stats each fire */ }

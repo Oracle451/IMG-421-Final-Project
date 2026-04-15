@@ -85,7 +85,10 @@ public class OceanBase : MonoBehaviour
             GameObject go  = Instantiate(DefenderPrefab, pos, Quaternion.identity);
             ShipBase ship = go.GetComponent<ShipBase>();
             if (ship != null)
+            {
                 ship.Faction = ShipFaction.Enemy;
+                ship.ApplyFactionLayer();
+            }
 
             EnemyShipAI ai = go.GetComponent<EnemyShipAI>();
             if (ai != null)

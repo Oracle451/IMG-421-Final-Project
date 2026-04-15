@@ -86,6 +86,7 @@ public class SpawnManager : MonoBehaviour
         if (ship != null)
         {
             ship.Faction = ShipFaction.Enemy;
+            ship.ApplyFactionLayer();
             // Scale stats by zone multipliers (applied via a simple stat scaler)
             go.AddComponent<ZoneStatScaler>().Init(zone.EnemyHealthMultiplier, zone.EnemyDamageMultiplier);
         }

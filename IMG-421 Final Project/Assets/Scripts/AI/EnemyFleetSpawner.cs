@@ -51,6 +51,7 @@ public class EnemyFleetSpawner : MonoBehaviour
         if (ship != null)
         {
             ship.Faction = ShipFaction.Enemy;
+            ship.ApplyFactionLayer();
             ship.OnShipDestroyed += OnFleetShipDestroyed;
             _fleetShips.Add(ship);
         }

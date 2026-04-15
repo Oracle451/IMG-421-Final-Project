@@ -66,6 +66,22 @@ public class ShipBase : MonoBehaviour, IDamageable
         }
     }
 
+    public void ApplyFactionLayer()
+    {
+        string layerName = Faction == ShipFaction.Player ? "PlayerShip" : "EnemyShip";
+        int layer = LayerMask.NameToLayer(layerName);
+        if (layer < 0) return;
+
+        SetLayerRecursively(gameObject, layer);
+    }
+
+    void SetLayerRecursively(GameObject target, int layer)
+    {
+        target.layer = layer;
+        foreach (Transform child in target.transform)
+            SetLayerRecursively(child.gameObject, layer);
+    }
+
     // ── Zone Scaling ──────────────────────────────────────────────────────────
 
     public void ScaleZoneStats(float healthMult, float damageMult)

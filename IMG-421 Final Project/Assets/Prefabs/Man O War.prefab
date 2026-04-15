@@ -111,11 +111,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CannonMounts: []
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   MuzzlePoint: {fileID: 0}
   EnemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!114 &816555712794529058
 MonoBehaviour:
   m_ObjectHideFlags: 0

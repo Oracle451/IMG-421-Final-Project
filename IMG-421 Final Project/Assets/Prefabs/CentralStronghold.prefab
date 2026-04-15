@@ -126,11 +126,11 @@ MonoBehaviour:
   GoldReward: 30
   TurretPivot: {fileID: 0}
   MuzzlePoint: {fileID: 0}
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
   PlayerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!1 &31988252769100512
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,11 +329,11 @@ MonoBehaviour:
   GoldReward: 30
   TurretPivot: {fileID: 0}
   MuzzlePoint: {fileID: 0}
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
   PlayerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!1 &5470889230364605567
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,11 +565,11 @@ MonoBehaviour:
   GoldReward: 30
   TurretPivot: {fileID: 0}
   MuzzlePoint: {fileID: 0}
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
   PlayerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!1 &8634974005958712224
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,8 +696,8 @@ MonoBehaviour:
   GoldReward: 30
   TurretPivot: {fileID: 0}
   MuzzlePoint: {fileID: 0}
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
   ExplosionVFX: {fileID: 0}
   PlayerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64

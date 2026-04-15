@@ -177,6 +177,7 @@ public class PlayerFleet : MonoBehaviour
         GameObject go  = Instantiate(prefab, pos, Quaternion.identity);
         ShipBase ship  = go.GetComponent<ShipBase>();
         ship.Faction   = ShipFaction.Player;
+        ship.ApplyFactionLayer();
         ship.OnShipDestroyed += s => OnShipLost(s);
         Ships.Add(ship);
         UIManager.Instance?.UpdateFleetCount(Ships.Count, Ships.Count);

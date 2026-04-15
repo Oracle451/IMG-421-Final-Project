@@ -28,7 +28,12 @@ public class CoastalTurret : MonoBehaviour
     private float _currentHealth;
     private float _fireCooldown;
 
-    void Start() => _currentHealth = MaxHealth;
+    void Start()
+    {
+        _currentHealth = MaxHealth;
+        if (PlayerLayer.value == 0)
+            PlayerLayer = LayerMask.GetMask("PlayerShip");
+    }
 
     void Update()
     {
