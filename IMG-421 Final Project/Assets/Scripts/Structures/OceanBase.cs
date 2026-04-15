@@ -83,6 +83,10 @@ public class OceanBase : MonoBehaviour
                            * DefenderSpawnRadius;
 
             GameObject go  = Instantiate(DefenderPrefab, pos, Quaternion.identity);
+            ShipBase ship = go.GetComponent<ShipBase>();
+            if (ship != null)
+                ship.Faction = ShipFaction.Enemy;
+
             EnemyShipAI ai = go.GetComponent<EnemyShipAI>();
             if (ai != null)
             {

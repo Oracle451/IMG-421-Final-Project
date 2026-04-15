@@ -85,6 +85,7 @@ public class SpawnManager : MonoBehaviour
         ShipBase ship   = go.GetComponent<ShipBase>();
         if (ship != null)
         {
+            ship.Faction = ShipFaction.Enemy;
             // Scale stats by zone multipliers (applied via a simple stat scaler)
             go.AddComponent<ZoneStatScaler>().Init(zone.EnemyHealthMultiplier, zone.EnemyDamageMultiplier);
         }

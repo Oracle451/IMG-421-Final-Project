@@ -156,7 +156,7 @@ MonoBehaviour:
   ManOWarPrefab: {fileID: 693869651391286636, guid: 63379446a8491a946b1e1ed58162fa7f, type: 3}
   StartingShipClass: 0
   StartingShipCount: 3
-  FormationSpacing: 20
+  FormationSpacing: 10
   MoveMarkerPrefab: {fileID: 6703199381905693918, guid: 93c86eb5b4bc20742bbf1aba152762ea, type: 3}
 --- !u!4 &2396339
 Transform:
@@ -3596,9 +3596,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SmoothTime: 0.5
-  DefaultHeight: 50
-  MinHeight: 22
-  MaxHeight: 60
+  DefaultHeight: 35
+  MinHeight: 12
+  MaxHeight: 50
   ZoomSpeed: 5
   ZoomOutHoldHeight: 55
   Pitch: 55
@@ -3720,24 +3720,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Zones:
-  - InnerRadius: 0
-    OuterRadius: 0
-    IslandCount: 0
-    TurretsPerIsland: 0
-    IslandPrefab: {fileID: 0}
-    TurretPrefab: {fileID: 0}
-  - InnerRadius: 0
-    OuterRadius: 0
-    IslandCount: 0
-    TurretsPerIsland: 0
-    IslandPrefab: {fileID: 0}
-    TurretPrefab: {fileID: 0}
-  - InnerRadius: 0
-    OuterRadius: 0
-    IslandCount: 0
-    TurretsPerIsland: 0
-    IslandPrefab: {fileID: 0}
-    TurretPrefab: {fileID: 0}
+  - InnerRadius: 50
+    OuterRadius: 200
+    IslandCount: 5
+    TurretsPerIsland: 2
+    IslandPrefab: {fileID: 7829737181143013592, guid: 97204bd8cdfc7de4f8c0e6430a83bb97, type: 3}
+    TurretPrefab: {fileID: 5132609773157363150, guid: fe6f40a7c03fbd6468de49d998df3d9d, type: 3}
   MapCenter: {x: 0, y: 0, z: 0}
   MinIslandSeparation: 20
 --- !u!4 &999095096
@@ -5309,33 +5297,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapCenter: {x: 0, y: 0, z: 0}
   Zones:
-  - Name: 
-    OuterRadius: 0
-    InnerRadius: 0
-    DangerLevel: 0
-    MaxEnemyShips: 0
-    MaxBases: 0
+  - Name: Outer Ring
+    OuterRadius: 200
+    InnerRadius: 120
+    DangerLevel: 1
+    MaxEnemyShips: 8
+    MaxBases: 2
     EnemyShipClass: 0
-    EnemyHealthMultiplier: 0
-    EnemyDamageMultiplier: 0
-  - Name: 
-    OuterRadius: 0
+    EnemyHealthMultiplier: 1
+    EnemyDamageMultiplier: 1
+  - Name: Mid Ring
+    OuterRadius: 120
+    InnerRadius: 70
+    DangerLevel: 2
+    MaxEnemyShips: 12
+    MaxBases: 4
+    EnemyShipClass: 1
+    EnemyHealthMultiplier: 1.4
+    EnemyDamageMultiplier: 1.2
+  - Name: Inner Ring
+    OuterRadius: 70
+    InnerRadius: 30
+    DangerLevel: 3
+    MaxEnemyShips: 16
+    MaxBases: 6
+    EnemyShipClass: 2
+    EnemyHealthMultiplier: 2
+    EnemyDamageMultiplier: 1.8
+  - Name: The Core
+    OuterRadius: 30
     InnerRadius: 0
-    DangerLevel: 0
-    MaxEnemyShips: 0
+    DangerLevel: 4
+    MaxEnemyShips: 6
     MaxBases: 0
-    EnemyShipClass: 0
-    EnemyHealthMultiplier: 0
-    EnemyDamageMultiplier: 0
-  - Name: 
-    OuterRadius: 0
-    InnerRadius: 0
-    DangerLevel: 0
-    MaxEnemyShips: 0
-    MaxBases: 0
-    EnemyShipClass: 0
-    EnemyHealthMultiplier: 0
-    EnemyDamageMultiplier: 0
+    EnemyShipClass: 2
+    EnemyHealthMultiplier: 3
+    EnemyDamageMultiplier: 2.5
 --- !u!4 &1433654764
 Transform:
   m_ObjectHideFlags: 0
