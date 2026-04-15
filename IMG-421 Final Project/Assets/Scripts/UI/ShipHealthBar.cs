@@ -19,15 +19,27 @@ public class ShipHealthBar : MonoBehaviour
     [Header("Billboard")]
     public bool FaceCamera = true;
 
+    [Header("Placement")]
+    public float VerticalOffset = 0.75f;
+    public Vector2 BarSize = new(90f, 14f);
+
     private ShipBase _ship;
     private Camera   _cam;
+    private Canvas   _canvas;
+    private RectTransform _rect;
+    private Bounds _visualBounds;
 
     void Start()
     {
         _ship = GetComponentInParent<ShipBase>();
         _cam  = Camera.main;
+        _canvas = GetComponent<Canvas>();
+        _rect = GetComponent<RectTransform>();
+        _rect.localScale = Vector3.one * 0.06f;
         AutoWireReferences();
         EnsureWorldSpaceCanvas();
+        CacheVisualBounds();
+        EnsureVisiblePosition();
 
         if (HealthSlider != null)
         {
@@ -55,6 +67,8 @@ public class ShipHealthBar : MonoBehaviour
                             :              LowColor;
         }
 
+        EnsureVisiblePosition();
+
         // Billboard — face camera
         if (FaceCamera && _cam != null)
             transform.rotation = _cam.transform.rotation;
@@ -67,16 +81,99 @@ public class ShipHealthBar : MonoBehaviour
 
         if (FillImage == null && HealthSlider != null && HealthSlider.fillRect != null)
             FillImage = HealthSlider.fillRect.GetComponent<Image>();
+
+        if (HealthSlider == null)
+            BuildRuntimeBar();
     }
 
     void EnsureWorldSpaceCanvas()
     {
-        Canvas canvas = GetComponent<Canvas>();
-        RectTransform rect = GetComponent<RectTransform>();
-        if (canvas != null)
-            canvas.renderMode = RenderMode.WorldSpace;
+        if (_canvas != null)
+            _canvas.renderMode = RenderMode.WorldSpace;
 
-        if (rect != null && rect.localScale == Vector3.zero)
-            rect.localScale = Vector3.one * 0.01f;
+        if (_rect != null)
+        {
+            if (_rect.localScale == Vector3.zero)
+                _rect.localScale = Vector3.one * 0.01f;
+            _rect.sizeDelta = BarSize;
+        }
+    }
+
+    void CacheVisualBounds()
+    {
+        if (_ship == null) return;
+
+        Renderer[] renderers = _ship.GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0)
+        {
+            _visualBounds = new Bounds(_ship.transform.position, Vector3.one);
+            return;
+        }
+
+        _visualBounds = renderers[0].bounds;
+        for (int i = 1; i < renderers.Length; i++)
+            _visualBounds.Encapsulate(renderers[i].bounds);
+    }
+
+    void EnsureVisiblePosition()
+    {
+        if (_ship == null || _rect == null) return;
+
+        float height = Mathf.Max(1f, _visualBounds.extents.y * 2f);
+        Vector3 worldPos = _ship.transform.position + Vector3.up * (height + VerticalOffset);
+        transform.position = worldPos;
+    }
+
+    void BuildRuntimeBar()
+    {
+        Sprite sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+
+        GameObject sliderGO = new("Slider", typeof(RectTransform), typeof(Slider));
+        sliderGO.transform.SetParent(transform, false);
+        RectTransform sliderRect = sliderGO.GetComponent<RectTransform>();
+        sliderRect.sizeDelta = BarSize;
+
+        GameObject backgroundGO = new("Background", typeof(RectTransform), typeof(Image));
+        backgroundGO.transform.SetParent(sliderGO.transform, false);
+        RectTransform backgroundRect = backgroundGO.GetComponent<RectTransform>();
+        backgroundRect.anchorMin = Vector2.zero;
+        backgroundRect.anchorMax = Vector2.one;
+        backgroundRect.offsetMin = Vector2.zero;
+        backgroundRect.offsetMax = Vector2.zero;
+        Image backgroundImage = backgroundGO.GetComponent<Image>();
+        backgroundImage.sprite = sprite;
+        backgroundImage.type = Image.Type.Sliced;
+        backgroundImage.color = new Color(0f, 0f, 0f, 0.65f);
+
+        GameObject fillAreaGO = new("Fill Area", typeof(RectTransform));
+        fillAreaGO.transform.SetParent(sliderGO.transform, false);
+        RectTransform fillAreaRect = fillAreaGO.GetComponent<RectTransform>();
+        fillAreaRect.anchorMin = Vector2.zero;
+        fillAreaRect.anchorMax = Vector2.one;
+        fillAreaRect.offsetMin = new Vector2(2f, 2f);
+        fillAreaRect.offsetMax = new Vector2(-2f, -2f);
+
+        GameObject fillGO = new("Fill", typeof(RectTransform), typeof(Image));
+        fillGO.transform.SetParent(fillAreaGO.transform, false);
+        RectTransform fillRect = fillGO.GetComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero;
+        fillRect.anchorMax = Vector2.one;
+        fillRect.offsetMin = Vector2.zero;
+        fillRect.offsetMax = Vector2.zero;
+        Image fill = fillGO.GetComponent<Image>();
+        fill.sprite = sprite;
+        fill.type = Image.Type.Sliced;
+        fill.color = FullColor;
+
+        Slider slider = sliderGO.GetComponent<Slider>();
+        slider.fillRect = fillRect;
+        slider.targetGraphic = fill;
+        slider.direction = Slider.Direction.LeftToRight;
+        slider.minValue = 0f;
+        slider.maxValue = 1f;
+        slider.value = 1f;
+
+        HealthSlider = slider;
+        FillImage = fill;
     }
 }

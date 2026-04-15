@@ -22,11 +22,19 @@ public class ShopController : MonoBehaviour
     public int FrigateCost  = 300;
     public int ManOWarCost  = 600;
 
+    [Header("Layout")]
+    public float ButtonPreferredHeight = 72f;
+    public float LabelPreferredHeight = 44f;
+
     void Start()
     {
         if (SchoonerCostText) SchoonerCostText.text = $"Schooner\n{SchoonerCost}g";
         if (FrigateCostText)  FrigateCostText.text  = $"Frigate\n{FrigateCost}g";
         if (ManOWarCostText)  ManOWarCostText.text   = $"Man-O-War\n{ManOWarCost}g";
+
+        ConfigureButtonLayout(BuySchoonerButton, SchoonerCostText);
+        ConfigureButtonLayout(BuyFrigateButton, FrigateCostText);
+        ConfigureButtonLayout(BuyManOWarButton, ManOWarCostText);
 
         BuySchoonerButton?.onClick.AddListener(() => Buy(ShipClass.Schooner, SchoonerCost));
         BuyFrigateButton?.onClick.AddListener(()  => Buy(ShipClass.Frigate,  FrigateCost));
@@ -53,6 +61,28 @@ public class ShopController : MonoBehaviour
     void RefreshGoldDisplay()
     {
         if (GoldDisplay) GoldDisplay.text = $"Gold: {CurrencyManager.Instance.CurrentGold}";
+    }
+
+    void ConfigureButtonLayout(Button button, TextMeshProUGUI label)
+    {
+        if (button != null)
+        {
+            LayoutElement layout = button.GetComponent<LayoutElement>();
+            if (layout == null) layout = button.gameObject.AddComponent<LayoutElement>();
+            layout.minHeight = ButtonPreferredHeight;
+            layout.preferredHeight = ButtonPreferredHeight;
+        }
+
+        if (label != null)
+        {
+            label.enableWordWrapping = true;
+            label.overflowMode = TextOverflowModes.Overflow;
+
+            LayoutElement layout = label.GetComponent<LayoutElement>();
+            if (layout == null) layout = label.gameObject.AddComponent<LayoutElement>();
+            layout.minHeight = LabelPreferredHeight;
+            layout.preferredHeight = LabelPreferredHeight;
+        }
     }
 
     // Trigger zone entry/exit

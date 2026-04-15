@@ -634,7 +634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.7264151, b: 0.12143554, a: 1}
+  m_Color: {r: 0, g: 0.6603774, b: 0.0018411763, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -862,6 +862,8 @@ MonoBehaviour:
   MidColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   LowColor: {r: 1, g: 0, b: 0, a: 1}
   FaceCamera: 1
+  VerticalOffset: 0.75
+  BarSize: {x: 90, y: 14}
 --- !u!1 &7993584843600766095
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1128,8 @@ MonoBehaviour:
   - {fileID: 2452410616406806102}
   - {fileID: 4205076835480491711}
   ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
+  ProjectileSpawnForwardOffset: 1.5
+  ProjectileSpawnHeightOffset: 0.75
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 128
