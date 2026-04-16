@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 7734489288143064221}
   - component: {fileID: 3284512056510101929}
   - component: {fileID: -7393440679856816736}
-  - component: {fileID: 7501099953823822733}
+  - component: {fileID: 4148085001778332549}
   m_Layer: 0
   m_Name: Frigate
   m_TagString: Untagged
@@ -1185,8 +1185,8 @@ MonoBehaviour:
   BowSpray: {fileID: 0}
   MinSpeedForWake: 0.5
   MaxSpeedForEmit: 10
---- !u!136 &7501099953823822733
-CapsuleCollider:
+--- !u!65 &4148085001778332549
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1203,11 +1203,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2
-  m_Height: 15
-  m_Direction: 2
-  m_Center: {x: 0, y: 1, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 3, y: 2, z: 15}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &9034546346005868329
 GameObject:
   m_ObjectHideFlags: 0
