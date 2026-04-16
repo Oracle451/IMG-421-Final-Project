@@ -124,7 +124,7 @@ public class SpawnManager : MonoBehaviour
         {
             float angle  = Random.Range(0f, 360f) * Mathf.Deg2Rad;
             float radius = Random.Range(zone.InnerRadius, zone.OuterRadius);
-            Vector3 candidate = center + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
+            Vector3 candidate = center + new Vector3(Mathf.Cos(angle) * radius, 1, Mathf.Sin(angle) * radius);
 
             if (Vector3.Distance(candidate, playerPos) >= MinSpawnDistFromPlayer)
                 return candidate;
