@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Manages all cannons on a ship. Finds the nearest enemy, rotates turrets,
-/// and fires projectiles with accuracy cone spread.
-/// </summary>
+// Manages all cannons on a ship. Finds the nearest enemy, rotates turrets,
+// and fires projectiles with accuracy cone spread.
 public class CannonController : MonoBehaviour
 {
     [Header("Cannon Mount Points")]
@@ -19,7 +17,7 @@ public class CannonController : MonoBehaviour
     [Header("Layer Masks")]
     public LayerMask EnemyLayer;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
     private ShipBase _ship;
     private float _fireCooldown;
@@ -70,7 +68,7 @@ public class CannonController : MonoBehaviour
         }
     }
 
-    // ── Targeting ────────────────────────────────────────────────────────────
+    // Targeting
 
     ShipBase FindNearestEnemy()
     {
@@ -83,7 +81,7 @@ public class CannonController : MonoBehaviour
         {
             ShipBase candidate = col.GetComponentInParent<ShipBase>();
             if (candidate == null || !candidate.IsAlive) continue;
-            if (candidate.Faction == _ship.Faction) continue;   // same team — skip
+            if (candidate.Faction == _ship.Faction) continue;   // same team = skip
 
             float d = Vector3.Distance(transform.position, candidate.transform.position);
             if (d < bestDist) { bestDist = d; best = candidate; }
@@ -91,7 +89,7 @@ public class CannonController : MonoBehaviour
         return best;
     }
 
-    // ── Firing ───────────────────────────────────────────────────────────────
+    // Firing
 
     void Fire(ShipBase target)
     {
@@ -101,20 +99,17 @@ public class CannonController : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             bool hasMount = CannonMounts.Count > 0;
-            Transform mount = hasMount
-                ? CannonMounts[i % CannonMounts.Count]
-                : transform;
+            Transform mount = hasMount ? CannonMounts[i % CannonMounts.Count] : transform;
 
             Vector3 origin = mount.position;
-            if (!hasMount)
-                origin += Vector3.up * ProjectileSpawnHeightOffset;
+            if (!hasMount) origin += Vector3.up * ProjectileSpawnHeightOffset;
 
             Vector3 baseDir = target.transform.position - origin;
             baseDir.y = 0f;
             if (baseDir == Vector3.zero) continue;
             baseDir.Normalize();
 
-            // Apply horizontal-only accuracy spread so cannonballs stay on the water plane.
+            // Apply horizontal only accuracy spread so cannonballs stay on the water plane.
             float halfCone = _ship.Stats.CannonAccuracyCone;
             Vector3 spread = Quaternion.Euler(
                 0f,
@@ -124,6 +119,7 @@ public class CannonController : MonoBehaviour
             Vector3 spawnPos = origin
                              + spread * ProjectileSpawnForwardOffset
                              + Vector3.up * ProjectileSpawnHeightOffset;
+                             
             GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(spread));
             Projectile proj   = projGO.GetComponent<Projectile>();
             if (proj != null)

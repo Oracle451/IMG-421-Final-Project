@@ -1,8 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Manages the player's currency (gold). Singleton.
-/// </summary>
+// Manages the player's currency (gold). Singleton.
 public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance { get; private set; }
@@ -30,7 +28,7 @@ public class CurrencyManager : MonoBehaviour
         UIManager.Instance?.UpdateCurrency(CurrentGold);
     }
 
-    /// <returns>True if purchase succeeded.</returns>
+    // returns True if purchase succeeded.
     public bool SpendCurrency(int amount)
     {
         if (amount > CurrentGold) return false;

@@ -1,9 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// Attach to each enemy ship that participates in Boids flocking.
-/// Must be registered with a BoidsFlock.
-/// </summary>
+// Attach to each enemy ship that participates in Boids flocking.
+// Must be registered with a BoidsFlock.
 [RequireComponent(typeof(Rigidbody))]
 public class BoidAgent : MonoBehaviour
 {
@@ -30,8 +28,7 @@ public class BoidAgent : MonoBehaviour
         }
 
         _flock = GetComponentInParent<BoidsFlock>();
-        if (_flock == null)
-            _flock = FindObjectOfType<BoidsFlock>();
+        if (_flock == null) _flock = FindObjectOfType<BoidsFlock>();
         _flock?.RegisterAgent(this);
     }
 
@@ -46,7 +43,7 @@ public class BoidAgent : MonoBehaviour
         Quaternion targetRot = Quaternion.LookRotation(direction);
         transform.rotation   = Quaternion.RotateTowards(transform.rotation, targetRot, 90f * Time.deltaTime);
 
-        Velocity   = transform.forward * speed;
+        Velocity = transform.forward * speed;
         _rb.velocity = Velocity;
     }
 }

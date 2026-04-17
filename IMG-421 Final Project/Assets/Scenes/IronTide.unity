@@ -154,8 +154,8 @@ MonoBehaviour:
   SchoonerPrefab: {fileID: 8257483789311396215, guid: d7a4d9a6b7230f747b16fb68d978590b, type: 3}
   FrigatePrefab: {fileID: 8257483789311396215, guid: 8beeca1f889894c448da78862708fa1f, type: 3}
   ManOWarPrefab: {fileID: 8257483789311396215, guid: a0c90ccf34fc63f4e94df0d79a46306e, type: 3}
-  StartingShipClass: 1
-  StartingShipCount: 4
+  StartingShipClass: 2
+  StartingShipCount: 1
   FormationSpacing: 10
   MoveMarkerPrefab: {fileID: 6703199381905693918, guid: 93c86eb5b4bc20742bbf1aba152762ea, type: 3}
 --- !u!4 &2396339

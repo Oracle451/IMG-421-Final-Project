@@ -1,18 +1,16 @@
 using UnityEngine;
 
-/// <summary>
-/// A static coastal turret mounted on an island.
-/// Rotates to track and fire at the nearest player ship within range.
-/// </summary>
+// A static coastal turret mounted on an island.
+// Rotates to track and fire at the nearest player ship within range.
 public class CoastalTurret : MonoBehaviour
 {
     [Header("Stats")]
-    public float MaxHealth      = 60f;
-    public float Damage         = 8f;
-    public float Range          = 18f;
-    public float FireRate       = 0.6f;   // shots per second
-    public float RotationSpeed  = 80f;    // degrees/sec
-    public int   GoldReward     = 30;
+    public float MaxHealth = 60f;
+    public float Damage = 8f;
+    public float Range = 18f;
+    public float FireRate = 0.6f; // shots per second
+    public float RotationSpeed = 80f; // degrees/sec
+    public int GoldReward = 30;
 
     [Header("References")]
     public Transform TurretPivot;
@@ -25,7 +23,7 @@ public class CoastalTurret : MonoBehaviour
     [Header("Layer Mask")]
     public LayerMask PlayerLayer;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
     private float _currentHealth;
     private float _fireCooldown;
@@ -35,8 +33,7 @@ public class CoastalTurret : MonoBehaviour
     {
         _currentHealth = MaxHealth;
         _ownerColliders = GetComponentsInChildren<Collider>();
-        if (PlayerLayer.value == 0)
-            PlayerLayer = LayerMask.GetMask("PlayerShip");
+        if (PlayerLayer.value == 0) PlayerLayer = LayerMask.GetMask("PlayerShip");
     }
 
     void Update()
@@ -54,8 +51,7 @@ public class CoastalTurret : MonoBehaviour
             if (dir != Vector3.zero)
             {
                 Quaternion desired = Quaternion.LookRotation(dir);
-                TurretPivot.rotation = Quaternion.RotateTowards(
-                    TurretPivot.rotation, desired, RotationSpeed * Time.deltaTime);
+                TurretPivot.rotation = Quaternion.RotateTowards( TurretPivot.rotation, desired, RotationSpeed * Time.deltaTime);
             }
         }
 
@@ -66,13 +62,13 @@ public class CoastalTurret : MonoBehaviour
         }
     }
 
-    // ── Targeting ────────────────────────────────────────────────────────────
+    // Targeting
 
     ShipBase FindPlayerShip()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, Range, PlayerLayer);
-        ShipBase best   = null;
-        float bestDist  = float.MaxValue;
+        ShipBase best = null;
+        float bestDist = float.MaxValue;
 
         foreach (Collider col in hits)
         {
@@ -84,7 +80,7 @@ public class CoastalTurret : MonoBehaviour
         return best;
     }
 
-    // ── Firing ───────────────────────────────────────────────────────────────
+    // Firing
 
     void FireAt(ShipBase target)
     {
@@ -98,11 +94,11 @@ public class CoastalTurret : MonoBehaviour
 
         Vector3 spawnPos = launchOrigin + dir * ProjectileSpawnForwardOffset;
         GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(dir));
-        Projectile proj   = projGO.GetComponent<Projectile>();
+        Projectile proj = projGO.GetComponent<Projectile>();
         proj?.Launch(dir * 22f, Damage, ShipFaction.Enemy, _ownerColliders);
     }
 
-    // ── Damage ───────────────────────────────────────────────────────────────
+    // Damage
 
     public void TakeDamage(float dmg)
     {

@@ -1,9 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// Central system for upgrading ship stats.
-/// Called by UIManager button callbacks.
-/// </summary>
+// Central system for upgrading ship stats.
+// Called by UIManager button callbacks.
 public class UpgradeSystem : MonoBehaviour
 {
     public static UpgradeSystem Instance { get; private set; }
@@ -14,8 +12,7 @@ public class UpgradeSystem : MonoBehaviour
         Instance = this;
     }
 
-    // ── Public Upgrade Methods ────────────────────────────────────────────────
-
+    // Public Upgrade Methods
     public void UpgradeCannons(ShipBase ship)
     {
         if (!ship.CanUpgradeCannons)
@@ -23,12 +20,15 @@ public class UpgradeSystem : MonoBehaviour
             Debug.Log($"{ship.ShipName}: Cannon upgrades maxed.");
             return;
         }
+
         int cost = ship.Stats.UpgradeCost(ship.CannonUpgradeLevel);
+
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
             Debug.Log("Not enough gold!");
             return;
         }
+
         ship.ApplyCannonUpgrade();
         RefreshPanel(ship);
         Debug.Log($"{ship.ShipName} cannon upgraded to level {ship.CannonUpgradeLevel}");
@@ -41,12 +41,15 @@ public class UpgradeSystem : MonoBehaviour
             Debug.Log($"{ship.ShipName}: Speed upgrades maxed.");
             return;
         }
+
         int cost = ship.Stats.UpgradeCost(ship.SpeedUpgradeLevel);
+
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
             Debug.Log("Not enough gold!");
             return;
         }
+
         ship.ApplySpeedUpgrade();
         RefreshPanel(ship);
     }
@@ -58,22 +61,25 @@ public class UpgradeSystem : MonoBehaviour
             Debug.Log($"{ship.ShipName}: Armor upgrades maxed.");
             return;
         }
+
         int cost = ship.Stats.UpgradeCost(ship.ArmorUpgradeLevel);
+        
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
             Debug.Log("Not enough gold!");
             return;
         }
+        
         ship.ApplyArmorUpgrade();
         RefreshPanel(ship);
     }
 
-    // ── Ship Purchase ─────────────────────────────────────────────────────────
+    // Ship Purchase
 
     public void PurchaseShip(ShipClass cls)
     {
         PlayerFleet fleet = GameManager.Instance.PlayerFleet;
-        ShipStats stats   = GetStatsForClass(cls);
+        ShipStats stats = GetStatsForClass(cls);
         if (stats == null) return;
 
         if (!CurrencyManager.Instance.SpendCurrency(stats.PurchaseCost))
@@ -86,14 +92,12 @@ public class UpgradeSystem : MonoBehaviour
         fleet.SpawnShip(cls, spawnPos);
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // Helpers
 
     ShipStats GetStatsForClass(ShipClass cls)
     {
-        // In a real project this would reference a central config asset
-        // For now, find a ship with the matching class in the player fleet as reference
-        foreach (ShipBase s in GameManager.Instance.PlayerFleet.Ships)
-            if (s.Stats.ShipClass == cls) return s.Stats;
+        // Find a ship with the matching class in the player fleet as reference
+        foreach (ShipBase s in GameManager.Instance.PlayerFleet.Ships) if (s.Stats.ShipClass == cls) return s.Stats;
         return null;
     }
 

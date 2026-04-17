@@ -1,9 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// Cannonball projectile. Physical travel time creates potential for misses.
-/// Damages ShipBase components OR StructureHitReceiver components on impact.
-/// </summary>
+// Cannonball projectile. Physical travel time creates potential for misses.
+// Damages ShipBase components OR StructureHitReceiver components on impact.
 [RequireComponent(typeof(Rigidbody))]
 public class Projectile : MonoBehaviour
 {
@@ -13,16 +11,16 @@ public class Projectile : MonoBehaviour
     [Header("VFX / SFX")]
     public GameObject HitVFX;
     public GameObject SplashVFX;
-    public AudioClip  HitMetallicSFX;
-    public AudioClip  SplashSFX;
+    public AudioClip HitMetallicSFX;
+    public AudioClip SplashSFX;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
-    private float       _damage;
+    private float _damage;
     private ShipFaction _ownerFaction;
-    private Rigidbody   _rb;
-    private bool        _hit;
-    private Collider[]  _ignoredColliders;
+    private Rigidbody _rb;
+    private bool _hit;
+    private Collider[] _ignoredColliders;
 
     void Awake()
     {
@@ -31,11 +29,11 @@ public class Projectile : MonoBehaviour
         _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
-    // ── Public API ────────────────────────────────────────────────────────────
+    // Public API
 
     public void Launch(Vector3 velocity, float damage, ShipFaction ownerFaction, Collider[] ignoredColliders = null)
     {
-        _damage       = damage;
+        _damage = damage;
         _ownerFaction = ownerFaction;
         _ignoredColliders = ignoredColliders;
 
@@ -44,8 +42,7 @@ public class Projectile : MonoBehaviour
         {
             foreach (Collider ignored in _ignoredColliders)
             {
-                if (ignored != null)
-                    Physics.IgnoreCollision(projectileCollider, ignored, true);
+                if (ignored != null) Physics.IgnoreCollision(projectileCollider, ignored, true);
             }
         }
 
@@ -53,7 +50,7 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, Lifetime);
     }
 
-    // ── Collision ────────────────────────────────────────────────────────────
+    // Collision
 
     void OnCollisionEnter(Collision col)
     {
@@ -90,7 +87,7 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // Helpers
 
     void SpawnFX(GameObject vfxPrefab, AudioClip sfx, Vector3 pos)
     {

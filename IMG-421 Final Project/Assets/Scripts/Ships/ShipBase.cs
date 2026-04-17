@@ -13,23 +13,23 @@ public class ShipBase : MonoBehaviour, IDamageable
     public GameObject ExplosionVFX;
     public TrailRenderer WakeTrail;
 
-    // ── Runtime state ────────────────────────────────────────────────────────
+    // Runtime state
     public float CurrentHealth { get; private set; }
 
     private float _healthMultiplier = 1f;
     private float _damageMultiplier = 1f;
     private bool _isDying;
 
-    public int CannonUpgradeLevel  { get; private set; }
-    public int SpeedUpgradeLevel   { get; private set; }
-    public int ArmorUpgradeLevel   { get; private set; }
+    public int CannonUpgradeLevel { get; private set; }
+    public int SpeedUpgradeLevel { get; private set; }
+    public int ArmorUpgradeLevel { get; private set; }
 
-    public float EffectiveMaxHealth      => (Stats.MaxHealth + ArmorUpgradeLevel * Stats.HealthPerUpgrade) * _healthMultiplier;
-    public float EffectiveDR             =>  Stats.ArmorDamageReduction + ArmorUpgradeLevel * Stats.DamageResistPerUpgrade;
-    public float EffectiveMoveSpeed      =>  Stats.MoveSpeed + SpeedUpgradeLevel * Stats.MoveSpeedPerUpgrade;
-    public float EffectiveCannonDamage   => (Stats.CannonDamage + CannonUpgradeLevel * Stats.CannonDamagePerUpgrade) * _damageMultiplier;
-    public float EffectiveCannonRange    =>  Stats.CannonRange + CannonUpgradeLevel * Stats.CannonRangePerUpgrade;
-    public float EffectiveCannonFireRate =>  Stats.CannonFireRate + CannonUpgradeLevel * Stats.CannonFireRatePerUpgrade;
+    public float EffectiveMaxHealth => (Stats.MaxHealth + ArmorUpgradeLevel * Stats.HealthPerUpgrade) * _healthMultiplier;
+    public float EffectiveDR => Stats.ArmorDamageReduction + ArmorUpgradeLevel * Stats.DamageResistPerUpgrade;
+    public float EffectiveMoveSpeed => Stats.MoveSpeed + SpeedUpgradeLevel * Stats.MoveSpeedPerUpgrade;
+    public float EffectiveCannonDamage => (Stats.CannonDamage + CannonUpgradeLevel * Stats.CannonDamagePerUpgrade) * _damageMultiplier;
+    public float EffectiveCannonRange => Stats.CannonRange + CannonUpgradeLevel * Stats.CannonRangePerUpgrade;
+    public float EffectiveCannonFireRate => Stats.CannonFireRate + CannonUpgradeLevel * Stats.CannonFireRatePerUpgrade;
 
     public bool IsAlive => CurrentHealth > 0f;
 
@@ -37,9 +37,9 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     protected Rigidbody Rb;
 
-    // ── Bobbing — runs on the MODEL child, not the root Rigidbody ────────────
+    // Bobbing: runs on the MODEL child, not the root Rigidbody
     [Header("Bobbing")]
-    public Transform ModelRoot;      // drag your mesh child here in Inspector
+    public Transform ModelRoot;
     public float BobAmplitude = 0.1f;
     public float BobFrequency = 1f;
     private float _bobOffset;
@@ -57,7 +57,7 @@ public class ShipBase : MonoBehaviour, IDamageable
 
     protected virtual void Update()
     {
-        // Bob the visual model child up and down — never touch the root transform
+        // Bob the visual model child up and down, never touch the root transform
         if (ModelRoot != null)
         {
             _bobOffset += Time.deltaTime * BobFrequency;
@@ -83,16 +83,16 @@ public class ShipBase : MonoBehaviour, IDamageable
             SetLayerRecursively(child.gameObject, layer);
     }
 
-    // ── Zone Scaling ──────────────────────────────────────────────────────────
+    // Zone Scaling
 
     public void ScaleZoneStats(float healthMult, float damageMult)
     {
         _healthMultiplier = healthMult;
         _damageMultiplier = damageMult;
-        CurrentHealth     = EffectiveMaxHealth;
+        CurrentHealth = EffectiveMaxHealth;
     }
 
-    // ── Damage / Heal ─────────────────────────────────────────────────────────
+    // Damage / Heal
 
     public virtual void TakeDamage(float rawDamage)
     {
@@ -100,8 +100,7 @@ public class ShipBase : MonoBehaviour, IDamageable
         float reduced = rawDamage * (1f - Mathf.Clamp01(EffectiveDR));
         CurrentHealth = Mathf.Max(0f, CurrentHealth - reduced);
 
-        if (Faction == ShipFaction.Player)
-            UIManager.Instance?.ShowShipPanel(this);
+        if (Faction == ShipFaction.Player) UIManager.Instance?.ShowShipPanel(this);
 
         if (CurrentHealth <= 0f) Die();
     }
@@ -111,11 +110,11 @@ public class ShipBase : MonoBehaviour, IDamageable
         CurrentHealth = Mathf.Min(EffectiveMaxHealth, CurrentHealth + amount);
     }
 
-    // ── Upgrades ──────────────────────────────────────────────────────────────
+    // Upgrades 
 
     public bool CanUpgradeCannons => Stats != null && CannonUpgradeLevel < Stats.MaxCannonUpgrades;
-    public bool CanUpgradeSpeed   => Stats != null && SpeedUpgradeLevel  < Stats.MaxSpeedUpgrades;
-    public bool CanUpgradeArmor   => Stats != null && ArmorUpgradeLevel  < Stats.MaxArmorUpgrades;
+    public bool CanUpgradeSpeed => Stats != null && SpeedUpgradeLevel < Stats.MaxSpeedUpgrades;
+    public bool CanUpgradeArmor => Stats != null && ArmorUpgradeLevel < Stats.MaxArmorUpgrades;
 
     public void ApplyCannonUpgrade()
     {
@@ -137,7 +136,7 @@ public class ShipBase : MonoBehaviour, IDamageable
         CurrentHealth = Mathf.Min(CurrentHealth + Stats.HealthPerUpgrade, EffectiveMaxHealth);
     }
 
-    // ── Death ─────────────────────────────────────────────────────────────────
+    // Death
 
     protected virtual void Die()
     {
@@ -165,9 +164,13 @@ public class ShipBase : MonoBehaviour, IDamageable
         }
 
         if (Faction == ShipFaction.Player)
+        {
             GameManager.Instance?.PlayerFleet?.OnShipLost(this);
+        }
         else
+        {
             CurrencyManager.Instance?.AddCurrency(Mathf.RoundToInt(Stats.SellValue * 0.6f));
+        }
 
         Destroy(gameObject, 0.1f);
     }

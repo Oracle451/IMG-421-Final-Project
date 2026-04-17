@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
-/// Manages the player's fleet: selection, movement orders, formation, and win/lose tracking.
-/// Attach to a persistent GameObject in the scene.
-/// </summary>
+// Manages the player's fleet: selection, movement orders, formation, and win/lose tracking.
+// Attach to a persistent GameObject in the scene.
 public class PlayerFleet : MonoBehaviour
 {
     [Header("Ship Prefabs (assign in Inspector)")]
@@ -24,7 +22,7 @@ public class PlayerFleet : MonoBehaviour
     [Header("Move Indicator")]
     public GameObject MoveMarkerPrefab;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
     public List<ShipBase> Ships { get; } = new();
     private ShipBase _selectedShip;
@@ -34,7 +32,9 @@ public class PlayerFleet : MonoBehaviour
     {
         _cam = Camera.main;
         for (int i = 0; i < StartingShipCount; i++)
+        {
             SpawnShip(StartingShipClass, transform.position + Vector3.right * i * FormationSpacing);
+        }
     }
 
     void Update()
@@ -43,11 +43,11 @@ public class PlayerFleet : MonoBehaviour
         HandleInput();
     }
 
-    // ── Input ────────────────────────────────────────────────────────────────
+    // Input
 
     void HandleInput()
     {
-        // Right-click to move selected ship or whole fleet
+        // Right click to move selected ship or whole fleet
         if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
         {
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
@@ -84,14 +84,18 @@ public class PlayerFleet : MonoBehaviour
             {
                 ShipBase clicked = hit.collider.GetComponentInParent<ShipBase>();
                 if (clicked != null && clicked.Faction == ShipFaction.Player)
+                {
                     SelectShip(clicked);
+                }
                 else
+                {
                     DeselectShip();
+                }
             }
         }
     }
 
-    // ── Selection ────────────────────────────────────────────────────────────
+    // Selection
 
     public void SelectShip(ShipBase ship)
     {
@@ -105,7 +109,7 @@ public class PlayerFleet : MonoBehaviour
         UIManager.Instance?.CloseShipPanel();
     }
 
-    // ── Movement ─────────────────────────────────────────────────────────────
+    // Movement
 
     void MoveFleetTo(Vector3 center)
     {
@@ -124,12 +128,10 @@ public class PlayerFleet : MonoBehaviour
         }
     }
 
-    // ── Formation ────────────────────────────────────────────────────────────
+    // Formation
 
-    /// <summary>
-    /// Reorders formation slots every frame based on ship class priority.
-    /// Heavy → front, Medium → middle, Light → rear/interior.
-    /// </summary>
+    // Reorders formation slots every frame based on ship class priority.
+    // Heavy = front, Medium = middle, Light = rear/interior.
     void UpdateFormation()
     {
         // Ships are sorted: ManOWar, then Frigate, then Schooner
@@ -162,7 +164,7 @@ public class PlayerFleet : MonoBehaviour
         return positions;
     }
 
-    // ── Ship Lifecycle ───────────────────────────────────────────────────────
+    // Ship Lifecycle
 
     public ShipBase SpawnShip(ShipClass cls, Vector3 pos)
     {
@@ -202,7 +204,7 @@ public class PlayerFleet : MonoBehaviour
         if (Ships.Count == 0) GameManager.Instance.OnPlayerFleetDestroyed();
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // Helpers
 
     void SpawnMoveMarker(Vector3 pos)
     {
@@ -229,7 +231,7 @@ public class PlayerFleet : MonoBehaviour
         }
     }
 
-    /// <summary>Returns fleet centroid for camera follow.</summary>
+    // Returns fleet centroid for camera follow.
     public Vector3 FleetCenter()
     {
         if (Ships.Count == 0) return Vector3.zero;

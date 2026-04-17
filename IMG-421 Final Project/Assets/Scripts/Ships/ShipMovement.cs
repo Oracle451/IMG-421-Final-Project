@@ -21,21 +21,19 @@ public class ShipMovement : MonoBehaviour
     void Awake()
     {
         _ship = GetComponent<ShipBase>();
-        _rb   = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
 
-    // ── Public API ────────────────────────────────────────────────────────────
-
+    // Public API
     public void SetDestination(Vector3 worldPos)
     {
-        _destination     = new Vector3(worldPos.x, transform.position.y, worldPos.z);
-        _hasDestination  = true;
+        _destination = new Vector3(worldPos.x, transform.position.y, worldPos.z);
+        _hasDestination = true;
     }
 
     public void ClearDestination() => _hasDestination = false;
 
-    public bool IsMoving => _hasDestination && 
-                            Vector3.Distance(transform.position, _destination) > StopDistance;
+    public bool IsMoving => _hasDestination && Vector3.Distance(transform.position, _destination) > StopDistance;
 
     void FixedUpdate()
     {
@@ -57,22 +55,21 @@ public class ShipMovement : MonoBehaviour
 
         Vector3 dir = toTarget.normalized;
 
-        // ── Rotation ─────────────────────────────────────────────────────────
+        // Rotation
         Quaternion targetRot = Quaternion.LookRotation(dir);
         Quaternion newRot    = Quaternion.RotateTowards(
             _rb.rotation, targetRot,
             _ship.Stats.RotationSpeed * Time.fixedDeltaTime);
         _rb.MoveRotation(newRot);
 
-        // ── Thrust — only when roughly facing the target ──────────────────────
+        // Thrust - only when roughly facing the target
         float angleToTarget = Vector3.Angle(transform.forward, dir);
-        float alignment     = 1f - Mathf.Clamp01(angleToTarget / AlignmentAngleThreshold);
+        float alignment = 1f - Mathf.Clamp01(angleToTarget / AlignmentAngleThreshold);
         // alignment = 0 when >25° off, ramps to 1 when fully aligned
-        // This eliminates sideways/backward drift on sharp turns
 
-        float speed        = _ship.EffectiveMoveSpeed * alignment;
-        Vector3 targetVel  = transform.forward * speed;
-        targetVel.y        = _rb.velocity.y;  // preserve gravity
+        float speed = _ship.EffectiveMoveSpeed * alignment;
+        Vector3 targetVel = transform.forward * speed;
+        targetVel.y = _rb.velocity.y;  // preserve gravity
 
         _rb.velocity = Vector3.Lerp(_rb.velocity, targetVel, 0.2f);
     }

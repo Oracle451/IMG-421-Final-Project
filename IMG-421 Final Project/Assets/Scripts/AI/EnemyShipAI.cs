@@ -1,9 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// State-machine AI for an individual enemy ship.
-/// States: Patrol → Search → Aggressive → Defense → Cowardly
-/// </summary>
+// State-machine AI for an individual enemy ship.
+// States: Patrol → Search → Aggressive → Defense → Cowardly
 [RequireComponent(typeof(ShipBase))]
 [RequireComponent(typeof(ShipMovement))]
 public class EnemyShipAI : MonoBehaviour
@@ -12,14 +10,14 @@ public class EnemyShipAI : MonoBehaviour
 
     [Header("Behavior Config")]
     public AIState InitialState = AIState.Patrol;
-    public float DetectionRange   = 25f;
-    public float CowardlyHPPct    = 0.25f;   // flees below this health percentage
-    public float AggressiveHPPct  = 0.5f;    // returns to fighting above this
-    public float PatrolRadius     = 15f;
-    public float CircleRadius     = 10f;      // radius for circling the player
+    public float DetectionRange = 25f;
+    public float CowardlyHPPct = 0.25f; // flees below this health percentage
+    public float AggressiveHPPct = 0.5f; // returns to fighting above this
+    public float PatrolRadius = 15f;
+    public float CircleRadius = 10f; // radius for circling the player
 
     [Header("Defense Target")]
-    public Transform DefenseAnchor;   // structure to defend
+    public Transform DefenseAnchor; // structure to defend
 
     // ── Runtime ──────────────────────────────────────────────────────────────
 
@@ -34,7 +32,7 @@ public class EnemyShipAI : MonoBehaviour
 
     void Awake()
     {
-        _ship     = GetComponent<ShipBase>();
+        _ship = GetComponent<ShipBase>();
         _movement = GetComponent<ShipMovement>();
     }
 
@@ -48,30 +46,39 @@ public class EnemyShipAI : MonoBehaviour
             return;
         }
 
-        _patrolCenter      = transform.position;
+        _patrolCenter = transform.position;
         _currentPatrolPoint = GetRandomPatrolPoint();
         TransitionTo(InitialState);
     }
 
     void Update()
     {
-        if (!_ship.IsAlive) return;
-        _stateTimer += Time.deltaTime;
+        if (!_ship.IsAlive) return; _stateTimer += Time.deltaTime;
 
         // Always check for player proximity
         Transform player = FindPlayer();
 
         switch (CurrentState)
         {
-            case AIState.Patrol:     UpdatePatrol(player);     break;
-            case AIState.Search:     UpdateSearch(player);     break;
-            case AIState.Aggressive: UpdateAggressive(player); break;
-            case AIState.Defense:    UpdateDefense(player);    break;
-            case AIState.Cowardly:   UpdateCowardly();         break;
+            case AIState.Patrol:
+                UpdatePatrol(player);
+                break;
+            case AIState.Search:
+                UpdateSearch(player);
+                break;
+            case AIState.Aggressive: 
+                UpdateAggressive(player); 
+                break;
+            case AIState.Defense:    
+                UpdateDefense(player);    
+                break;
+            case AIState.Cowardly:   
+                UpdateCowardly();         
+                break;
         }
     }
 
-    // ── State Updates ─────────────────────────────────────────────────────────
+    // State Updates
 
     void UpdatePatrol(Transform player)
     {
@@ -82,28 +89,35 @@ public class EnemyShipAI : MonoBehaviour
             _movement.SetDestination(_currentPatrolPoint);
         }
 
-        if (player != null && Vector3.Distance(transform.position, player.position) <= DetectionRange)
+        if (player != null && Vector3.Distance(transform.position, player.position) <= DetectionRange) 
+        {
             TransitionTo(AIState.Aggressive);
+        }
     }
 
     void UpdateSearch(Transform player)
     {
-        // Wander; transition to aggressive if player found
-        if (_stateTimer > 8f)
-            TransitionTo(AIState.Patrol);
+        // Wander - transition to aggressive if player found
+        if (_stateTimer > 8f) TransitionTo(AIState.Patrol);
 
-        if (player != null)
-            TransitionTo(AIState.Aggressive);
+        if (player != null) TransitionTo(AIState.Aggressive);
     }
 
     void UpdateAggressive(Transform player)
     {
-        if (player == null) { TransitionTo(AIState.Search); return; }
+        if (player == null) 
+        { 
+            TransitionTo(AIState.Search); 
+            return; 
+        }
         _playerTarget = player;
 
         // Health-based cowardly check
         if (_ship.CurrentHealth / _ship.EffectiveMaxHealth < CowardlyHPPct)
-        { TransitionTo(AIState.Cowardly); return; }
+        { 
+            TransitionTo(AIState.Cowardly); 
+            return; 
+        }
 
         // Circle the player for tactical engagement
         _circleAngle += Time.deltaTime * 40f;
@@ -131,8 +145,7 @@ public class EnemyShipAI : MonoBehaviour
         else
         {
             // Return to anchor
-            _movement.SetDestination(DefenseAnchor.position +
-                Random.insideUnitSphere.With(y: 0) * 5f);
+            _movement.SetDestination(DefenseAnchor.position + Random.insideUnitSphere.With(y: 0) * 5f);
         }
     }
 
@@ -148,11 +161,10 @@ public class EnemyShipAI : MonoBehaviour
         }
 
         // Recover if health restored
-        if (_ship.CurrentHealth / _ship.EffectiveMaxHealth > AggressiveHPPct)
-            TransitionTo(AIState.Aggressive);
+        if (_ship.CurrentHealth / _ship.EffectiveMaxHealth > AggressiveHPPct) TransitionTo(AIState.Aggressive);
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // Helpers
 
     void TransitionTo(AIState next)
     {
@@ -164,7 +176,7 @@ public class EnemyShipAI : MonoBehaviour
     {
         PlayerFleet fleet = GameManager.Instance?.PlayerFleet;
         if (fleet == null || fleet.Ships.Count == 0) return null;
-        // Return centroid proxy — use first alive ship
+        // Return centroid proxy - use first alive ship
         return fleet.Ships[0]?.transform;
     }
 
@@ -186,6 +198,5 @@ public class EnemyShipAI : MonoBehaviour
 // Extension helper
 public static class Vector3Extensions
 {
-    public static Vector3 With(this Vector3 v, float? x = null, float? y = null, float? z = null)
-        => new Vector3(x ?? v.x, y ?? v.y, z ?? v.z);
+    public static Vector3 With(this Vector3 v, float? x = null, float? y = null, float? z = null) => new Vector3(x ?? v.x, y ?? v.y, z ?? v.z);
 }

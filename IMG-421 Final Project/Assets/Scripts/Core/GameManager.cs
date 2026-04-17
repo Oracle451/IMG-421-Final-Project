@@ -1,9 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// Central singleton that owns top-level game state and coordinates major systems.
-/// </summary>
+// Central singleton that owns top-level game state and coordinates major systems.
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -23,21 +21,25 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(gameObject); 
+            return; 
+        }
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        if (PlayerFleet == null)   PlayerFleet   = FindObjectOfType<PlayerFleet>();
-        if (ZoneManager == null)   ZoneManager   = FindObjectOfType<ZoneManager>();
+        if (PlayerFleet == null) PlayerFleet = FindObjectOfType<PlayerFleet>();
+        if (ZoneManager == null) ZoneManager = FindObjectOfType<ZoneManager>();
         if (CurrencyManager == null) CurrencyManager = FindObjectOfType<CurrencyManager>();
-        if (SpawnManager == null)  SpawnManager  = FindObjectOfType<SpawnManager>();
+        if (SpawnManager == null) SpawnManager = FindObjectOfType<SpawnManager>();
         if (CameraController == null) CameraController = FindObjectOfType<CameraController>();
     }
 
-    // ── Win / Lose ───────────────────────────────────────────────────────────
+    // Win / Lose
 
     public void OnStrongholdDestroyed()
     {
@@ -55,7 +57,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("IronTide: Player Lost!");
     }
 
-    // ── Pause ────────────────────────────────────────────────────────────────
+    // Pause
 
     public void TogglePause()
     {
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ── Restart ──────────────────────────────────────────────────────────────
+    // Restart
 
     public void RestartGame()
     {

@@ -1,9 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// Controls a ship's wake trail particle system or TrailRenderer based on velocity.
-/// Attach to the same GameObject as ShipBase.
-/// </summary>
+// Controls a ship's wake trail particle system or TrailRenderer based on velocity.
+// Attach to the same GameObject as ShipBase.
 [RequireComponent(typeof(ShipBase))]
 public class WakeTrailController : MonoBehaviour
 {
@@ -15,22 +13,22 @@ public class WakeTrailController : MonoBehaviour
     public ParticleSystem BowSpray;
 
     [Header("Thresholds")]
-    public float MinSpeedForWake  = 0.5f;
-    public float MaxSpeedForEmit  = 10f;
+    public float MinSpeedForWake = 0.5f;
+    public float MaxSpeedForEmit = 10f;
 
-    private ShipBase  _ship;
+    private ShipBase _ship;
     private Rigidbody _rb;
 
     void Awake()
     {
         _ship = GetComponent<ShipBase>();
-        _rb   = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
         float speed = _rb.velocity.magnitude;
-        bool moving  = speed > MinSpeedForWake;
+        bool moving = speed > MinSpeedForWake;
 
         // TrailRenderer width scales with speed
         if (WakeTrail != null)

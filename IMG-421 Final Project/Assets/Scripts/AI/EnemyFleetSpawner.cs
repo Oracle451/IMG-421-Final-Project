@@ -1,22 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Spawns a coordinated enemy fleet using BoidsFlock group behavior.
-/// Attach to an empty GameObject placed in the scene or spawned at runtime.
-/// </summary>
+// Spawns a coordinated enemy fleet using BoidsFlock group behavior.
+// Attach to an empty GameObject placed in the scene or spawned at runtime.
 public class EnemyFleetSpawner : MonoBehaviour
 {
     [Header("Fleet Composition")]
-    public GameObject LeaderShipPrefab;     // Man-O-War typically
-    public GameObject EscortShipPrefab;     // Frigates / Schooners
+    public GameObject LeaderShipPrefab; // Man-O-War typically
+    public GameObject EscortShipPrefab; // Frigates / Schooners
     public int EscortCount = 4;
     public float SpawnRadius = 8f;
 
     [Header("Behavior")]
     public EnemyShipAI.AIState InitialFleetState = EnemyShipAI.AIState.Patrol;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
     private BoidsFlock _flock;
     private readonly List<ShipBase> _fleetShips = new();
@@ -29,8 +27,8 @@ public class EnemyFleetSpawner : MonoBehaviour
         // Spawn leader
         if (LeaderShipPrefab != null)
         {
-            GameObject leader    = Instantiate(LeaderShipPrefab, transform.position, Quaternion.identity, transform);
-            _flock.LeaderTarget  = leader.transform;
+            GameObject leader = Instantiate(LeaderShipPrefab, transform.position, Quaternion.identity, transform);
+            _flock.LeaderTarget = leader.transform;
             RegisterShip(leader);
         }
 
@@ -38,8 +36,8 @@ public class EnemyFleetSpawner : MonoBehaviour
         for (int i = 0; i < EscortCount; i++)
         {
             if (EscortShipPrefab == null) break;
-            float angle  = (360f / EscortCount) * i * Mathf.Deg2Rad;
-            Vector3 pos  = transform.position + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * SpawnRadius;
+            float angle = (360f / EscortCount) * i * Mathf.Deg2Rad;
+            Vector3 pos = transform.position + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * SpawnRadius;
             GameObject escort = Instantiate(EscortShipPrefab, pos, Quaternion.identity, transform);
             RegisterShip(escort);
         }
@@ -70,7 +68,6 @@ public class EnemyFleetSpawner : MonoBehaviour
         _fleetShips.Remove(ship);
         _flock.UnregisterAgent(ship.GetComponent<BoidAgent>());
         // Fleet is eliminated when all ships are gone
-        if (_fleetShips.Count == 0)
-            Destroy(gameObject, 1f);
+        if (_fleetShips.Count == 0) Destroy(gameObject, 1f);
     }
 }

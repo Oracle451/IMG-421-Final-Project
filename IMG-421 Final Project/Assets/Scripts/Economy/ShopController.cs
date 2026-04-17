@@ -2,10 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Shop panel that lets the player purchase new ships.
-/// Trigger zone activates when the player enters a safe zone.
-/// </summary>
+// Shop panel that lets the player purchase new ships.
+// Trigger zone activates when the player enters a safe zone.
 public class ShopController : MonoBehaviour
 {
     [Header("UI References")]
@@ -19,8 +17,8 @@ public class ShopController : MonoBehaviour
 
     [Header("Ship Costs (override if no stats ref)")]
     public int SchoonerCost = 150;
-    public int FrigateCost  = 300;
-    public int ManOWarCost  = 600;
+    public int FrigateCost = 300;
+    public int ManOWarCost = 600;
 
     [Header("Layout")]
     public float ButtonPreferredHeight = 72f;
@@ -29,16 +27,16 @@ public class ShopController : MonoBehaviour
     void Start()
     {
         if (SchoonerCostText) SchoonerCostText.text = $"Schooner\n{SchoonerCost}g";
-        if (FrigateCostText)  FrigateCostText.text  = $"Frigate\n{FrigateCost}g";
-        if (ManOWarCostText)  ManOWarCostText.text   = $"Man-O-War\n{ManOWarCost}g";
+        if (FrigateCostText) FrigateCostText.text = $"Frigate\n{FrigateCost}g";
+        if (ManOWarCostText) ManOWarCostText.text = $"Man-O-War\n{ManOWarCost}g";
 
         ConfigureButtonLayout(BuySchoonerButton, SchoonerCostText);
         ConfigureButtonLayout(BuyFrigateButton, FrigateCostText);
         ConfigureButtonLayout(BuyManOWarButton, ManOWarCostText);
 
         BuySchoonerButton?.onClick.AddListener(() => Buy(ShipClass.Schooner, SchoonerCost));
-        BuyFrigateButton?.onClick.AddListener(()  => Buy(ShipClass.Frigate,  FrigateCost));
-        BuyManOWarButton?.onClick.AddListener(()  => Buy(ShipClass.ManOWar,  ManOWarCost));
+        BuyFrigateButton?.onClick.AddListener(() => Buy(ShipClass.Frigate,  FrigateCost));
+        BuyManOWarButton?.onClick.AddListener(() => Buy(ShipClass.ManOWar,  ManOWarCost));
     }
 
     void OnEnable()
@@ -88,13 +86,11 @@ public class ShopController : MonoBehaviour
     // Trigger zone entry/exit
     void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<PlayerFleet>() != null)
-            UIManager.Instance?.ToggleShop();
+        if (other.GetComponentInParent<PlayerFleet>() != null) UIManager.Instance?.ToggleShop();
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.GetComponentInParent<PlayerFleet>() != null)
-            UIManager.Instance?.ToggleShop();
+        if (other.GetComponentInParent<PlayerFleet>() != null) UIManager.Instance?.ToggleShop();
     }
 }
