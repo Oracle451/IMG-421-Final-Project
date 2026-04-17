@@ -13,12 +13,9 @@ public class CoastalTurret : MonoBehaviour
     public int GoldReward = 30;
 
     [Header("References")]
-    public Transform TurretPivot;
-    public Transform MuzzlePoint;
     public GameObject ProjectilePrefab;
     public GameObject ExplosionVFX;
     public float ProjectileSpawnForwardOffset = 1.5f;
-    public float ProjectileSpawnHeightOffset = 0.5f;
 
     [Header("Layer Mask")]
     public LayerMask PlayerLayer;
@@ -27,13 +24,24 @@ public class CoastalTurret : MonoBehaviour
 
     private float _currentHealth;
     private float _fireCooldown;
-    private Collider[] _ownerColliders;
+    private Collider[] _ignoredColliders;
 
     void Start()
     {
         _currentHealth = MaxHealth;
-        _ownerColliders = GetComponentsInChildren<Collider>();
         if (PlayerLayer.value == 0) PlayerLayer = LayerMask.GetMask("PlayerShip");
+
+        // Ignore collisions with all CoastalTurret colliders in the scene
+        CoastalTurret[] allTurrets = FindObjectsByType<CoastalTurret>(FindObjectsSortMode.None);
+        int total = 0;
+        foreach (CoastalTurret t in allTurrets)
+            total += t.GetComponentsInChildren<Collider>().Length;
+
+        _ignoredColliders = new Collider[total];
+        int idx = 0;
+        foreach (CoastalTurret t in allTurrets)
+            foreach (Collider c in t.GetComponentsInChildren<Collider>())
+                _ignoredColliders[idx++] = c;
     }
 
     void Update()
@@ -43,16 +51,13 @@ public class CoastalTurret : MonoBehaviour
         ShipBase target = FindPlayerShip();
         if (target == null) return;
 
-        // Rotate turret pivot toward target on Y axis only
-        if (TurretPivot != null)
+        // Rotate this transform toward target on Y axis only
+        Vector3 dir = (target.transform.position - transform.position);
+        dir.y = 0f;
+        if (dir != Vector3.zero)
         {
-            Vector3 dir = (target.transform.position - TurretPivot.position);
-            dir.y = 0f;
-            if (dir != Vector3.zero)
-            {
-                Quaternion desired = Quaternion.LookRotation(dir);
-                TurretPivot.rotation = Quaternion.RotateTowards( TurretPivot.rotation, desired, RotationSpeed * Time.deltaTime);
-            }
+            Quaternion desired = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, desired, RotationSpeed * Time.deltaTime);
         }
 
         if (_fireCooldown <= 0f)
@@ -85,8 +90,8 @@ public class CoastalTurret : MonoBehaviour
     void FireAt(ShipBase target)
     {
         if (ProjectilePrefab == null) return;
-        Transform origin = MuzzlePoint != null ? MuzzlePoint : transform;
-        Vector3 launchOrigin = origin.position + Vector3.up * ProjectileSpawnHeightOffset;
+
+        Vector3 launchOrigin = transform.position + Vector3.up;
         Vector3 dir = target.transform.position - launchOrigin;
         dir.y = 0f;
         if (dir == Vector3.zero) return;
@@ -95,7 +100,7 @@ public class CoastalTurret : MonoBehaviour
         Vector3 spawnPos = launchOrigin + dir * ProjectileSpawnForwardOffset;
         GameObject projGO = Instantiate(ProjectilePrefab, spawnPos, Quaternion.LookRotation(dir));
         Projectile proj = projGO.GetComponent<Projectile>();
-        proj?.Launch(dir * 22f, Damage, ShipFaction.Enemy, _ownerColliders);
+        proj?.Launch(dir * 22f, Damage, ShipFaction.Enemy, _ignoredColliders);
     }
 
     // Damage

@@ -3725,7 +3725,7 @@ MonoBehaviour:
     IslandCount: 5
     TurretsPerIsland: 2
     IslandPrefab: {fileID: 7829737181143013592, guid: 97204bd8cdfc7de4f8c0e6430a83bb97, type: 3}
-    TurretPrefab: {fileID: 5132609773157363150, guid: fe6f40a7c03fbd6468de49d998df3d9d, type: 3}
+    TurretPrefab: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
   MapCenter: {x: 0, y: 0, z: 0}
   MinIslandSeparation: 20
 --- !u!4 &999095096
@@ -6799,7 +6799,7 @@ MonoBehaviour:
   EnemySchoonerPrefab: {fileID: 8257483789311396215, guid: d7a4d9a6b7230f747b16fb68d978590b, type: 3}
   EnemyFrigatePrefab: {fileID: 8257483789311396215, guid: 8beeca1f889894c448da78862708fa1f, type: 3}
   EnemyManOWarPrefab: {fileID: 8257483789311396215, guid: a0c90ccf34fc63f4e94df0d79a46306e, type: 3}
-  OceanBasePrefab: {fileID: 6378412059640777927, guid: 1f552c69091fc2641b8a7f0f890995fc, type: 3}
+  OceanBasePrefab: {fileID: 31988252769100512, guid: 2b3b2db9e293aa240a192b120a9798be, type: 3}
   SpawnCheckInterval: 10
   MinSpawnDistFromPlayer: 30
 --- !u!4 &1820332571
