@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1954350061286501357}
   - component: {fileID: 4353688303787283389}
   - component: {fileID: 7495813821091759578}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: OceanBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 2238333072064456712}
   - component: {fileID: 1447266662473060653}
   - component: {fileID: 1240231952262853413}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,6 +189,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1954350061286501357}
     m_Modifications:
+    - target: {fileID: 2852721254268346567, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3006353867147239099, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.14
@@ -229,9 +233,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3077376582630845010, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4861964503023750355, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_Name
       value: CoastalTurret (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -262,6 +278,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1954350061286501357}
     m_Modifications:
+    - target: {fileID: 2852721254268346567, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3006353867147239099, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.08
@@ -302,9 +322,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3077376582630845010, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4861964503023750355, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_Name
       value: CoastalTurret (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -335,6 +367,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1954350061286501357}
     m_Modifications:
+    - target: {fileID: 2852721254268346567, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3006353867147239099, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.14
@@ -375,9 +411,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3077376582630845010, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4861964503023750355, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_Name
       value: CoastalTurret (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -408,6 +456,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1954350061286501357}
     m_Modifications:
+    - target: {fileID: 2852721254268346567, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3006353867147239099, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.08
@@ -448,9 +500,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3077376582630845010, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4861964503023750355, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
       propertyPath: m_Name
       value: CoastalTurret
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303855267808751242, guid: 879704f20054962489c00bb2bf539bdb, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

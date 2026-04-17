@@ -1091,7 +1091,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stats: {fileID: 11400000, guid: 810c305dbdf1ef74b8ea656ee2e1fdb9, type: 2}
-  Faction: 0
   ShipName: Schooner
   ExplosionVFX: {fileID: 0}
   WakeTrail: {fileID: 0}
@@ -1133,6 +1132,9 @@ MonoBehaviour:
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 128
+  EnemyStructureLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &7734489288143064221
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,8 +4,11 @@ using UnityEngine;
 // A floating ocean base (oil-rig style). Has its own turrets and optionally
 // spawns defending ships. When destroyed it gives a large gold reward.
 // The central stronghold is a special instance of this with isCentralStronghold=true.
-public class OceanBase : MonoBehaviour
+public class OceanBase : MonoBehaviour, IDamageable
 {
+    public bool IsAlive { get; private set; } = true;
+    public ShipFaction Faction => ShipFaction.Enemy;
+
     [Header("Stats")]
     public float MaxHealth = 400f;
     public int   GoldReward = 250;
@@ -47,6 +50,7 @@ public class OceanBase : MonoBehaviour
 
     void Die()
     {
+        IsAlive = false;
         CurrencyManager.Instance?.AddCurrency(GoldReward);
 
         if (SinkingVFX) Instantiate(SinkingVFX, transform.position, Quaternion.identity);

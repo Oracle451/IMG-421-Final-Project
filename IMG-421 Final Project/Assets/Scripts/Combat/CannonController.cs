@@ -16,6 +16,7 @@ public class CannonController : MonoBehaviour
 
     [Header("Layer Masks")]
     public LayerMask EnemyLayer;
+    public LayerMask EnemyStructureLayer;
 
     // Runtime
 
@@ -46,7 +47,7 @@ public class CannonController : MonoBehaviour
 
         _fireCooldown -= Time.deltaTime;
 
-        ShipBase target = FindNearestEnemy();
+        IDamageable target = FindNearestEnemy();
         if (target == null) return;
 
         // Rotate all cannon mounts to face target
@@ -70,18 +71,20 @@ public class CannonController : MonoBehaviour
 
     // Targeting
 
-    ShipBase FindNearestEnemy()
+    IDamageable FindNearestEnemy()
     {
         float range = _ship.EffectiveCannonRange;
-        Collider[] hits = Physics.OverlapSphere(transform.position, range, EnemyLayer);
-        ShipBase best  = null;
+        LayerMask combined = EnemyLayer | EnemyStructureLayer;
+        Collider[] hits = Physics.OverlapSphere(transform.position, range, combined);
+
+        IDamageable best = null;
         float bestDist = float.MaxValue;
 
         foreach (Collider col in hits)
         {
-            ShipBase candidate = col.GetComponentInParent<ShipBase>();
+            IDamageable candidate = col.GetComponentInParent<IDamageable>();
             if (candidate == null || !candidate.IsAlive) continue;
-            if (candidate.Faction == _ship.Faction) continue;   // same team = skip
+            if (candidate.Faction == _ship.Faction) continue;
 
             float d = Vector3.Distance(transform.position, candidate.transform.position);
             if (d < bestDist) { bestDist = d; best = candidate; }
@@ -91,7 +94,7 @@ public class CannonController : MonoBehaviour
 
     // Firing
 
-    void Fire(ShipBase target)
+    void Fire(IDamageable target)
     {
         if (ProjectilePrefab == null) return;
 

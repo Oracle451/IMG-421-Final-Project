@@ -2,8 +2,10 @@ using UnityEngine;
 
 // A static coastal turret mounted on an island.
 // Rotates to track and fire at the nearest player ship within range.
-public class CoastalTurret : MonoBehaviour
+public class CoastalTurret : MonoBehaviour, IDamageable
 {
+    public bool IsAlive { get; private set; } = true;
+    public ShipFaction Faction => ShipFaction.Enemy;
     [Header("Stats")]
     public float MaxHealth = 60f;
     public float Damage = 8f;
@@ -113,6 +115,7 @@ public class CoastalTurret : MonoBehaviour
 
     void Die()
     {
+        IsAlive = false;
         CurrencyManager.Instance?.AddCurrency(GoldReward);
         if (ExplosionVFX) Instantiate(ExplosionVFX, transform.position, Quaternion.identity);
         Destroy(gameObject);

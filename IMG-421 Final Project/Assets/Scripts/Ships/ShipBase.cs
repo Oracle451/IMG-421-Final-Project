@@ -6,7 +6,7 @@ public class ShipBase : MonoBehaviour, IDamageable
 {
     [Header("Config")]
     public ShipStats Stats;
-    public ShipFaction Faction;
+    public ShipFaction Faction { get; set; }
     public string ShipName;
 
     [Header("VFX")]

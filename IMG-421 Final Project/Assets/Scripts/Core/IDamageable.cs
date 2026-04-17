@@ -1,6 +1,10 @@
 // Shared interface for anything that can receive damage: ships, turrets, bases.
+using UnityEngine;
+
 public interface IDamageable
 {
-    void TakeDamage(float amount);
     bool IsAlive { get; }
+    ShipFaction Faction { get; }
+    Transform transform { get; }
+    void TakeDamage(float dmg);
 }
