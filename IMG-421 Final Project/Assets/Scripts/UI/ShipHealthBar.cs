@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// World-space health bar rendered above each ship via a Canvas in World Space.
-/// Attach to a child GameObject of the ship that has a Canvas (World Space) and Slider.
-/// </summary>
+// World-space health bar rendered above each ship via a Canvas in World Space.
+// Attach to a child GameObject of the ship that has a Canvas (World Space) and Slider.
 public class ShipHealthBar : MonoBehaviour
 {
     [Header("References")]
@@ -12,9 +10,9 @@ public class ShipHealthBar : MonoBehaviour
     public Image  FillImage;
 
     [Header("Colors")]
-    public Color FullColor   = Color.green;
-    public Color MidColor    = Color.yellow;
-    public Color LowColor    = Color.red;
+    public Color FullColor = Color.green;
+    public Color MidColor = Color.yellow;
+    public Color LowColor = Color.red;
 
     [Header("Billboard")]
     public bool FaceCamera = true;
@@ -24,8 +22,8 @@ public class ShipHealthBar : MonoBehaviour
     public Vector2 BarSize = new(90f, 14f);
 
     private ShipBase _ship;
-    private Camera   _cam;
-    private Canvas   _canvas;
+    private Camera _cam;
+    private Canvas _canvas;
     private RectTransform _rect;
     private Bounds _visualBounds;
 
@@ -45,7 +43,7 @@ public class ShipHealthBar : MonoBehaviour
         {
             HealthSlider.minValue = 0f;
             HealthSlider.maxValue = 1f;
-            HealthSlider.value    = 1f;
+            HealthSlider.value = 1f;
         }
     }
 
@@ -54,47 +52,40 @@ public class ShipHealthBar : MonoBehaviour
         if (_ship == null) return;
 
         // Update fill
-        float pct = _ship.EffectiveMaxHealth > 0f
-            ? _ship.CurrentHealth / _ship.EffectiveMaxHealth
-            : 0f;
+        float pct = _ship.EffectiveMaxHealth > 0f ? _ship.CurrentHealth / _ship.EffectiveMaxHealth : 0f;
 
         if (HealthSlider) HealthSlider.value = pct;
 
         if (FillImage)
         {
-            FillImage.color = pct > 0.6f ? FullColor
-                            : pct > 0.3f ? MidColor
-                            :              LowColor;
+            FillImage.color = pct > 0.6f ? FullColor : pct > 0.3f ? MidColor : LowColor;
         }
 
         EnsureVisiblePosition();
 
-        // Billboard — face camera
-        if (FaceCamera && _cam != null)
-            transform.rotation = _cam.transform.rotation;
+        // Billboard - face camera
+        if (FaceCamera && _cam != null) transform.rotation = _cam.transform.rotation;
     }
 
     void AutoWireReferences()
     {
-        if (HealthSlider == null)
-            HealthSlider = GetComponentInChildren<Slider>(true);
+        if (HealthSlider == null) HealthSlider = GetComponentInChildren<Slider>(true);
 
         if (FillImage == null && HealthSlider != null && HealthSlider.fillRect != null)
+        {
             FillImage = HealthSlider.fillRect.GetComponent<Image>();
+        }
 
-        if (HealthSlider == null)
-            BuildRuntimeBar();
+        if (HealthSlider == null) BuildRuntimeBar();
     }
 
     void EnsureWorldSpaceCanvas()
     {
-        if (_canvas != null)
-            _canvas.renderMode = RenderMode.WorldSpace;
+        if (_canvas != null) _canvas.renderMode = RenderMode.WorldSpace;
 
         if (_rect != null)
         {
-            if (_rect.localScale == Vector3.zero)
-                _rect.localScale = Vector3.one * 0.01f;
+            if (_rect.localScale == Vector3.zero) _rect.localScale = Vector3.one * 0.01f;
             _rect.sizeDelta = BarSize;
         }
     }
@@ -111,8 +102,7 @@ public class ShipHealthBar : MonoBehaviour
         }
 
         _visualBounds = renderers[0].bounds;
-        for (int i = 1; i < renderers.Length; i++)
-            _visualBounds.Encapsulate(renderers[i].bounds);
+        for (int i = 1; i < renderers.Length; i++) _visualBounds.Encapsulate(renderers[i].bounds);
     }
 
     void EnsureVisiblePosition()

@@ -1,10 +1,8 @@
 using UnityEngine;
 
-/// <summary>
-/// Defines concentric ring zones on the circular map.
-/// Each zone has a danger level and spawn parameters.
-/// Tracks which zone the player fleet is currently in.
-/// </summary>
+// Defines concentric ring zones on the circular map.
+// Each zone has a danger level and spawn parameters.
+// Tracks which zone the player fleet is currently in.
 public class ZoneManager : MonoBehaviour
 {
     public static ZoneManager Instance { get; private set; }
@@ -13,16 +11,16 @@ public class ZoneManager : MonoBehaviour
     public class Zone
     {
         public string Name;
-        public float OuterRadius;   // distance from map center
+        public float OuterRadius; // distance from map center
         public float InnerRadius;
-        public int DangerLevel;     // 1=Outer, 2=Mid, 3=Inner, 4=Core
+        public int DangerLevel; // 1=Outer, 2=Mid, 3=Inner, 4=Core
 
         [Header("Spawn Config")]
         public int MaxEnemyShips;
         public int MaxBases;
         public ShipClass EnemyShipClass;
-        public float EnemyHealthMultiplier  = 1f;
-        public float EnemyDamageMultiplier  = 1f;
+        public float EnemyHealthMultiplier = 1f;
+        public float EnemyDamageMultiplier = 1f;
     }
 
     [Header("Map Center")]
@@ -31,7 +29,7 @@ public class ZoneManager : MonoBehaviour
     [Header("Zones (outer → inner)")]
     public Zone[] Zones;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
     private Zone _currentZone;
 
@@ -39,8 +37,7 @@ public class ZoneManager : MonoBehaviour
     {
         if (GameManager.Instance?.PlayerFleet == null) return;
         Vector3 fleetPos = GameManager.Instance.PlayerFleet.FleetCenter();
-        float dist       = Vector3.Distance(new Vector3(fleetPos.x, 0, fleetPos.z),
-                                            new Vector3(MapCenter.x,  0, MapCenter.z));
+        float dist = Vector3.Distance(new Vector3(fleetPos.x, 0, fleetPos.z), new Vector3(MapCenter.x,  0, MapCenter.z));
 
         Zone detected = null;
         foreach (Zone z in Zones)
@@ -61,14 +58,13 @@ public class ZoneManager : MonoBehaviour
 
     public Zone GetZoneAtPosition(Vector3 worldPos)
     {
-        float dist = Vector3.Distance(new Vector3(worldPos.x, 0, worldPos.z),
-                                      new Vector3(MapCenter.x,  0, MapCenter.z));
-        foreach (Zone z in Zones)
-            if (dist <= z.OuterRadius && dist >= z.InnerRadius) return z;
+        float dist = Vector3.Distance(new Vector3(worldPos.x, 0, worldPos.z), new Vector3(MapCenter.x,  0, MapCenter.z));
+        
+        foreach (Zone z in Zones) if (dist <= z.OuterRadius && dist >= z.InnerRadius) return z;
         return null;
     }
 
-    // ── Debug Gizmos ──────────────────────────────────────────────────────────
+    // Debug Gizmos
 
     void OnDrawGizmos()
     {
@@ -85,7 +81,7 @@ public class ZoneManager : MonoBehaviour
     void DrawCircle(Vector3 center, float radius)
     {
         int segments = 64;
-        float step   = 360f / segments;
+        float step = 360f / segments;
         Vector3 prev = center + new Vector3(radius, 0, 0);
         for (int i = 1; i <= segments; i++)
         {

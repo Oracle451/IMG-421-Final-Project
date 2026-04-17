@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Procedurally spawns enemy ships and fleets based on the player's current zone.
-/// Uses object pooling concepts – maintains active enemy count within zone limits.
-/// </summary>
+// Procedurally spawns enemy ships and fleets based on the player's current zone.
+// Uses object pooling concepts – maintains active enemy count within zone limits.
 public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager Instance { get; private set; }
@@ -22,11 +20,11 @@ public class SpawnManager : MonoBehaviour
     public float SpawnCheckInterval = 10f;
     public float MinSpawnDistFromPlayer = 30f;
 
-    // ── Runtime ──────────────────────────────────────────────────────────────
+    // Runtime
 
     private ZoneManager.Zone _currentZone;
     private readonly List<GameObject> _activeEnemies = new();
-    private readonly List<GameObject> _activeBases   = new();
+    private readonly List<GameObject> _activeBases = new();
     private float _spawnTimer;
 
     void Awake()
@@ -46,26 +44,24 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    // ── Zone Change ──────────────────────────────────────────────────────────
+    // Zone Change
 
     public void OnZoneChanged(ZoneManager.Zone newZone)
     {
         _currentZone = newZone;
-        _spawnTimer  = SpawnCheckInterval - 2f;  // trigger spawn soon
+        _spawnTimer  = SpawnCheckInterval - 2f; // trigger spawn soon
     }
 
-    // ── Spawning ─────────────────────────────────────────────────────────────
+    // Spawning
 
     void TrySpawnEnemies()
     {
         if (_currentZone == null) return;
 
         int missing = _currentZone.MaxEnemyShips - _activeEnemies.Count;
-        for (int i = 0; i < missing; i++)
-            SpawnEnemy(_currentZone);
+        for (int i = 0; i < missing; i++) SpawnEnemy(_currentZone);
 
-        if (_activeBases.Count < _currentZone.MaxBases)
-            SpawnBase(_currentZone);
+        if (_activeBases.Count < _currentZone.MaxBases) SpawnBase(_currentZone);
     }
 
     void SpawnEnemy(ZoneManager.Zone zone)
@@ -96,8 +92,7 @@ public class SpawnManager : MonoBehaviour
         if (ai != null && _activeBases.Count > 0)
         {
             int idx = Random.Range(0, _activeBases.Count);
-            if (_activeBases[idx] != null)
-                ai.DefenseAnchor = _activeBases[idx].transform;
+            if (_activeBases[idx] != null) ai.DefenseAnchor = _activeBases[idx].transform;
         }
 
         _activeEnemies.Add(go);
@@ -113,21 +108,20 @@ public class SpawnManager : MonoBehaviour
         _activeBases.Add(go);
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // Helpers
 
     Vector3 GetSpawnPosition(ZoneManager.Zone zone)
     {
-        Vector3 center    = ZoneManager.Instance?.MapCenter ?? Vector3.zero;
+        Vector3 center = ZoneManager.Instance?.MapCenter ?? Vector3.zero;
         Vector3 playerPos = GameManager.Instance?.PlayerFleet?.FleetCenter() ?? Vector3.zero;
 
         for (int attempt = 0; attempt < 10; attempt++)
         {
-            float angle  = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
             float radius = Random.Range(zone.InnerRadius, zone.OuterRadius);
             Vector3 candidate = center + new Vector3(Mathf.Cos(angle) * radius, 1, Mathf.Sin(angle) * radius);
 
-            if (Vector3.Distance(candidate, playerPos) >= MinSpawnDistFromPlayer)
-                return candidate;
+            if (Vector3.Distance(candidate, playerPos) >= MinSpawnDistFromPlayer) return candidate;
         }
         return Vector3.zero;
     }
@@ -139,11 +133,7 @@ public class SpawnManager : MonoBehaviour
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-
-/// <summary>
-/// Temporarily scales a spawned enemy's stats at runtime per-zone difficulty.
-/// </summary>
+// Temporarily scales a spawned enemy's stats at runtime per-zone difficulty.
 public class ZoneStatScaler : MonoBehaviour
 {
     public void Init(float healthMult, float damageMult)
@@ -157,7 +147,7 @@ public class ZoneStatScaler : MonoBehaviour
 
     System.Collections.IEnumerator ApplyScaling(ShipBase ship, float hm, float dm)
     {
-        yield return null;  // wait one frame for ShipBase.Start to set CurrentHealth
+        yield return null; // wait one frame for ShipBase.Start to set CurrentHealth
         // Can't directly set stats without reflection; instead route through a public method
         ship.ScaleZoneStats(hm, dm);
     }

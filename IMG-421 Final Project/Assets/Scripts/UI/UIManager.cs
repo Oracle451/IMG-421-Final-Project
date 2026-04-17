@@ -2,9 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Central UI manager: HUD overlays, win/lose screens, ship info panels.
-/// </summary>
+// Central UI manager: HUD overlays, win/lose screens, ship info panels.
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -48,7 +46,7 @@ public class UIManager : MonoBehaviour
         ShopPanel?.SetActive(false);
     }
 
-    // ── HUD Updates ──────────────────────────────────────────────────────────
+    // HUD Updates
 
     public void UpdateCurrency(int amount)
     {
@@ -65,19 +63,19 @@ public class UIManager : MonoBehaviour
         if (FleetCountText) FleetCountText.text = $"Fleet: {alive}/{total}";
     }
 
-    // ── Ship Panel ───────────────────────────────────────────────────────────
+    // Ship Panel
 
     public void ShowShipPanel(ShipBase ship)
     {
         _selectedShip = ship;
         ShipInfoPanel?.SetActive(true);
 
-        if (ShipNameText)   ShipNameText.text  = ship.ShipName;
-        if (ShipClassText)  ShipClassText.text  = ship.Stats.ShipClass.ToString();
+        if (ShipNameText) ShipNameText.text  = ship.ShipName;
+        if (ShipClassText) ShipClassText.text  = ship.Stats.ShipClass.ToString();
         if (HealthSlider)
         {
             HealthSlider.maxValue = ship.Stats.MaxHealth;
-            HealthSlider.value    = ship.CurrentHealth;
+            HealthSlider.value = ship.CurrentHealth;
         }
 
         // Wire buttons dynamically (removes previous listeners first)
@@ -107,8 +105,7 @@ public class UIManager : MonoBehaviour
     {
         if (_selectedShip == null) return;
         int cost = Mathf.RoundToInt((_selectedShip.Stats.MaxHealth - _selectedShip.CurrentHealth) * 0.5f);
-        if (CurrencyManager.Instance.SpendCurrency(cost))
-            _selectedShip.Repair(_selectedShip.Stats.MaxHealth);
+        if (CurrencyManager.Instance.SpendCurrency(cost)) _selectedShip.Repair(_selectedShip.Stats.MaxHealth);
     }
 
     void OnSellClicked()
@@ -120,12 +117,12 @@ public class UIManager : MonoBehaviour
         CloseShipPanel();
     }
 
-    // ── Win / Lose ───────────────────────────────────────────────────────────
+    // Win / Lose
 
     public void ShowWinScreen()  => WinScreen?.SetActive(true);
     public void ShowLoseScreen() => LoseScreen?.SetActive(true);
 
-    // ── Shop ─────────────────────────────────────────────────────────────────
+    // Shop
 
     public void ToggleShop() => ShopPanel?.SetActive(!ShopPanel.activeSelf);
 }
