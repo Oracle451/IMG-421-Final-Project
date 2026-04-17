@@ -1094,8 +1094,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Stats: {fileID: 11400000, guid: b2bcf74b94ca4f841ae7ba34bf60edf7, type: 2}
   ShipName: Frigate
-  ExplosionVFX: {fileID: 0}
+  ExplosionVFX: {fileID: 7880794598796608280, guid: 23451a4af45075b47bb2caf286211aee, type: 3}
   WakeTrail: {fileID: 0}
+  ExplosionSounds:
+  - {fileID: 8300000, guid: 069a1359bcd98e149b5b002feb7bd9fa, type: 3}
+  - {fileID: 8300000, guid: b931dfe5069832b43ac07a3e5168cee9, type: 3}
+  - {fileID: 8300000, guid: 66561aea113cb7a4b9a81ba417dabc00, type: 3}
+  - {fileID: 8300000, guid: a8711fd7de04dfc49b664de14fac6a3f, type: 3}
+  - {fileID: 8300000, guid: 515e9a855abac294aae4de98cb36c4c8, type: 3}
   ModelRoot: {fileID: 0}
   BobAmplitude: 0.1
   BobFrequency: 1
@@ -1139,6 +1145,12 @@ MonoBehaviour:
   EnemyStructureLayer:
     serializedVersion: 2
     m_Bits: 512
+  FireSounds:
+  - {fileID: 8300000, guid: 01463a0895238e84e92a51fa001d9da5, type: 3}
+  - {fileID: 8300000, guid: 5d954b1a3000906468051de3afd86b93, type: 3}
+  - {fileID: 8300000, guid: 85adb300f6449ff4d884a89353bde95f, type: 3}
+  - {fileID: 8300000, guid: f5e9adf99cb67df40a40ef5c639b08c2, type: 3}
+  - {fileID: 8300000, guid: 92ac81bcb3786bb48afd269f230e3986, type: 3}
 --- !u!114 &7734489288143064221
 MonoBehaviour:
   m_ObjectHideFlags: 0

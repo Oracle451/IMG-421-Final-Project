@@ -399,7 +399,7 @@ MonoBehaviour:
   RotationSpeed: 80
   GoldReward: 30
   ProjectilePrefab: {fileID: 8626368994882404115, guid: 062b47fd53aed304b9a4395179ed9cd3, type: 3}
-  ExplosionVFX: {fileID: 0}
+  ExplosionVFX: {fileID: 7880794598796608280, guid: 23451a4af45075b47bb2caf286211aee, type: 3}
   ProjectileSpawnForwardOffset: 1.5
   PlayerLayer:
     serializedVersion: 2

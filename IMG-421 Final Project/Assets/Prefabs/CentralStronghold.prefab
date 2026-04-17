@@ -66,7 +66,7 @@ MonoBehaviour:
   DefenderPrefab: {fileID: 8257483789311396215, guid: 8beeca1f889894c448da78862708fa1f, type: 3}
   DefenderCount: 3
   DefenderSpawnRadius: 12
-  ExplosionVFX: {fileID: 0}
+  ExplosionVFX: {fileID: 7880794598796608280, guid: 23451a4af45075b47bb2caf286211aee, type: 3}
   SinkingVFX: {fileID: 0}
 --- !u!114 &7495813821091759578
 MonoBehaviour:

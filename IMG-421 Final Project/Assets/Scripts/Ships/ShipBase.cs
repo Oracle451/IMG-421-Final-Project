@@ -13,6 +13,9 @@ public class ShipBase : MonoBehaviour, IDamageable
     public GameObject ExplosionVFX;
     public TrailRenderer WakeTrail;
 
+    [Header("Audio")]
+    public AudioClip[] ExplosionSounds;
+
     // Runtime state
     public float CurrentHealth { get; private set; }
 
@@ -144,6 +147,10 @@ public class ShipBase : MonoBehaviour, IDamageable
         _isDying = true;
         CurrentHealth = 0f;
 
+        Vector3 deathPosition = transform.position;
+
+        PlayRandomExplosionSound(deathPosition);  
+
         DisableGameplay();
 
         if (ExplosionVFX) Instantiate(ExplosionVFX, transform.position, Quaternion.identity);
@@ -173,6 +180,24 @@ public class ShipBase : MonoBehaviour, IDamageable
         }
 
         Destroy(gameObject, 0.1f);
+    }
+
+    void PlayRandomExplosionSound(Vector3 position)
+    {
+        if (ExplosionSounds == null || ExplosionSounds.Length == 0) return;
+        AudioClip clip = ExplosionSounds[UnityEngine.Random.Range(0, ExplosionSounds.Length)];
+        if (clip == null) return;
+
+        GameObject tempGO = new GameObject("ExplosionSFX");
+        tempGO.transform.position = position;
+
+        AudioSource source = tempGO.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.spatialBlend = 0f;   // 0 = fully 2D, always audible regardless of distance
+        source.volume = 1f;
+        source.Play();
+
+        Destroy(tempGO, clip.length);
     }
 
     void DisableGameplay()

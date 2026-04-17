@@ -18,6 +18,10 @@ public class CannonController : MonoBehaviour
     public LayerMask EnemyLayer;
     public LayerMask EnemyStructureLayer;
 
+    [Header("Audio")]
+    public AudioClip[] FireSounds;
+    private AudioSource _audioSource;
+
     // Runtime
 
     private ShipBase _ship;
@@ -29,6 +33,10 @@ public class CannonController : MonoBehaviour
         _ship = GetComponentInParent<ShipBase>();
         _ownerColliders = _ship != null ? _ship.GetComponentsInChildren<Collider>() : null;
         RefreshTargetLayer();
+
+        _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+            _audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void RefreshStats() { /* cannons re-read from ship stats each fire */ }
@@ -133,6 +141,16 @@ public class CannonController : MonoBehaviour
                             _ownerColliders);
             }
         }
+
+        PlayRandomFireSound();
+    }
+
+    void PlayRandomFireSound()
+    {
+        if (_audioSource == null || FireSounds == null || FireSounds.Length == 0) return;
+        AudioClip clip = FireSounds[Random.Range(0, FireSounds.Length)];
+        if (clip != null)
+            _audioSource.PlayOneShot(clip);
     }
 
     void OnDrawGizmosSelected()
