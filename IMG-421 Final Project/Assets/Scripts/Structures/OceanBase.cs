@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // A floating ocean base (oil-rig style). Has its own turrets and optionally
 // spawns defending ships. When destroyed it gives a large gold reward.
@@ -26,30 +27,89 @@ public class OceanBase : MonoBehaviour, IDamageable
     public GameObject ExplosionVFX;
     public GameObject SinkingVFX;
 
-    // Runtime
+    [Header("Health Bar")]
+    public bool ShowHealthBar = true;
+    public Vector3 HealthBarLocalOffset = new(0f, 3.2f, 0f);
+    public Vector2 HealthBarSize = new(120f, 14f);
 
+    // Runtime
     public float CurrentHealth { get; private set; }
+
+    private Camera _mainCamera;
+    private Slider _healthSlider;
+    private Image _healthFill;
+    private Canvas _healthCanvas;
+
+    void Awake()
+    {
+        ApplyStructureLayerRecursively();
+        EnsureDamageReceivers();
+    }
 
     void Start()
     {
         CurrentHealth = MaxHealth;
+        _mainCamera = Camera.main;
 
         // Auto-collect child turrets
         if (Turrets.Count == 0) Turrets.AddRange(GetComponentsInChildren<CoastalTurret>());
 
+        if (ShowHealthBar)
+            BuildHealthBar();
+
+        UpdateHealthBar();
         SpawnDefenders();
     }
 
-    // Damage
+    void Update()
+    {
+        UpdateHealthBar();
+    }
 
+    void ApplyStructureLayerRecursively()
+    {
+        int structureLayer = LayerMask.NameToLayer("Structure");
+        if (structureLayer < 0) return;
+        SetLayerRecursively(gameObject, structureLayer);
+    }
+
+    void EnsureDamageReceivers()
+    {
+        foreach (Collider col in GetComponentsInChildren<Collider>(true))
+        {
+            CoastalTurret turretParent = col.GetComponentInParent<CoastalTurret>();
+            if (turretParent != null)
+                continue;
+
+            StructureHitReceiver receiver = col.GetComponent<StructureHitReceiver>();
+            if (receiver == null)
+                receiver = col.gameObject.AddComponent<StructureHitReceiver>();
+
+            receiver.Type = StructureHitReceiver.StructureType.OceanBase;
+            receiver.ExplicitBase = this;
+        }
+    }
+
+    void SetLayerRecursively(GameObject target, int layer)
+    {
+        target.layer = layer;
+        foreach (Transform child in target.transform)
+            SetLayerRecursively(child.gameObject, layer);
+    }
+
+    // Damage
     public void TakeDamage(float dmg)
     {
+        if (!IsAlive) return;
+
         CurrentHealth = Mathf.Max(0f, CurrentHealth - dmg);
+        UpdateHealthBar();
         if (CurrentHealth <= 0f) Die();
     }
 
     void Die()
     {
+        if (!IsAlive) return;
         IsAlive = false;
         CurrencyManager.Instance?.AddCurrency(GoldReward);
 
@@ -71,7 +131,6 @@ public class OceanBase : MonoBehaviour, IDamageable
     }
 
     // Defenders
-
     void SpawnDefenders()
     {
         if (DefenderPrefab == null) return;
@@ -100,14 +159,108 @@ public class OceanBase : MonoBehaviour, IDamageable
         }
     }
 
-    // Projectile hit forwarding
+    void BuildHealthBar()
+    {
+        GameObject canvasGO = new GameObject("OceanBaseHealthBar");
+        canvasGO.transform.SetParent(transform, false);
+        canvasGO.transform.localPosition = HealthBarLocalOffset;
 
-    // Attach a child Collider to the base and hook this so projectiles can hit it.
+        _healthCanvas = canvasGO.AddComponent<Canvas>();
+        _healthCanvas.renderMode = RenderMode.WorldSpace;
+        _healthCanvas.sortingOrder = 100;
+
+        RectTransform canvasRect = canvasGO.GetComponent<RectTransform>();
+        canvasRect.sizeDelta = HealthBarSize;
+        canvasRect.localScale = Vector3.one * 0.01f;
+
+        canvasGO.AddComponent<CanvasScaler>().dynamicPixelsPerUnit = 10f;
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        GameObject bgGO = new GameObject("Background");
+        bgGO.transform.SetParent(canvasGO.transform, false);
+        Image bg = bgGO.AddComponent<Image>();
+        bg.color = new Color(0f, 0f, 0f, 0.75f);
+        RectTransform bgRect = bgGO.GetComponent<RectTransform>();
+        bgRect.anchorMin = Vector2.zero;
+        bgRect.anchorMax = Vector2.one;
+        bgRect.offsetMin = Vector2.zero;
+        bgRect.offsetMax = Vector2.zero;
+
+        GameObject sliderGO = new GameObject("Slider");
+        sliderGO.transform.SetParent(canvasGO.transform, false);
+        _healthSlider = sliderGO.AddComponent<Slider>();
+        RectTransform sliderRect = sliderGO.GetComponent<RectTransform>();
+        sliderRect.anchorMin = Vector2.zero;
+        sliderRect.anchorMax = Vector2.one;
+        sliderRect.offsetMin = new Vector2(1f, 1f);
+        sliderRect.offsetMax = new Vector2(-1f, -1f);
+        _healthSlider.transition = Selectable.Transition.None;
+        _healthSlider.minValue = 0f;
+        _healthSlider.maxValue = 1f;
+        _healthSlider.value = 1f;
+        _healthSlider.direction = Slider.Direction.LeftToRight;
+
+        GameObject fillAreaGO = new GameObject("Fill Area");
+        fillAreaGO.transform.SetParent(sliderGO.transform, false);
+        RectTransform fillAreaRect = fillAreaGO.AddComponent<RectTransform>();
+        fillAreaRect.anchorMin = Vector2.zero;
+        fillAreaRect.anchorMax = Vector2.one;
+        fillAreaRect.offsetMin = Vector2.zero;
+        fillAreaRect.offsetMax = Vector2.zero;
+
+        GameObject fillGO = new GameObject("Fill");
+        fillGO.transform.SetParent(fillAreaGO.transform, false);
+        _healthFill = fillGO.AddComponent<Image>();
+        _healthFill.color = Color.green;
+        RectTransform fillRect = fillGO.GetComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero;
+        fillRect.anchorMax = Vector2.one;
+        fillRect.offsetMin = Vector2.zero;
+        fillRect.offsetMax = Vector2.zero;
+
+        _healthSlider.fillRect = fillRect;
+        _healthSlider.targetGraphic = _healthFill;
+
+        GameObject handleSlideArea = new GameObject("Handle Slide Area");
+        handleSlideArea.transform.SetParent(sliderGO.transform, false);
+        RectTransform handleAreaRect = handleSlideArea.AddComponent<RectTransform>();
+        handleAreaRect.anchorMin = Vector2.zero;
+        handleAreaRect.anchorMax = Vector2.one;
+        handleAreaRect.offsetMin = Vector2.zero;
+        handleAreaRect.offsetMax = Vector2.zero;
+
+        GameObject handleGO = new GameObject("Handle");
+        handleGO.transform.SetParent(handleSlideArea.transform, false);
+        Image handleImg = handleGO.AddComponent<Image>();
+        handleImg.color = new Color(0, 0, 0, 0);
+        RectTransform handleRect = handleGO.GetComponent<RectTransform>();
+        handleRect.sizeDelta = Vector2.zero;
+        _healthSlider.handleRect = handleRect;
+    }
+
+    void UpdateHealthBar()
+    {
+        if (_healthSlider == null) return;
+
+        float pct = MaxHealth > 0f ? CurrentHealth / MaxHealth : 0f;
+        _healthSlider.value = pct;
+        if (_healthFill != null)
+            _healthFill.color = pct > 0.6f ? Color.green : pct > 0.3f ? Color.yellow : Color.red;
+
+        if (_healthCanvas != null)
+        {
+            if (_mainCamera == null) _mainCamera = Camera.main;
+            if (_mainCamera != null)
+                _healthCanvas.transform.rotation = _mainCamera.transform.rotation;
+        }
+    }
+
+    // Projectile hit forwarding
     void OnCollisionEnter(Collision col)
     {
         Projectile proj = col.collider.GetComponent<Projectile>();
         // Projectile handles its own damage call via ShipBase.TakeDamage;
-        // for structures we need direct forwarding, handled in Projectile via DamageableStructure interface.
+        // for structures we need direct forwarding, handled in Projectile via StructureHitReceiver.
     }
 
     void OnDrawGizmosSelected()

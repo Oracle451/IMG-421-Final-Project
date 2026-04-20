@@ -5,6 +5,11 @@ using UnityEngine;
 // Islands can have optional CoastalTurret children.
 public class IslandGenerator : MonoBehaviour
 {
+    [Header("Turret Placement")]
+    public float TurretRingRadius = 3f;
+    public float TurretHeightAboveIsland = 0.35f;
+    public float TurretExtraRaise = 0.25f;
+
     [System.Serializable]
     public class IslandZoneConfig
     {
@@ -53,15 +58,41 @@ public class IslandGenerator : MonoBehaviour
 
             placed.Add(candidate);
             GameObject island = Instantiate(zone.IslandPrefab, candidate, Quaternion.Euler(0, Random.Range(0f, 360f), 0));
+            Bounds islandBounds = CalculateIslandBounds(island, candidate);
 
             // Spawn turrets as children
             for (int t = 0; t < zone.TurretsPerIsland; t++)
             {
                 if (zone.TurretPrefab == null) break;
                 float ta = (360f / zone.TurretsPerIsland) * t * Mathf.Deg2Rad;
-                Vector3 tPos = candidate + new Vector3(Mathf.Cos(ta), 0, Mathf.Sin(ta)) * 3f;
+                Vector3 horizontalOffset = new Vector3(Mathf.Cos(ta), 0f, Mathf.Sin(ta)) * TurretRingRadius;
+                float turretBaseHeight = islandBounds.max.y + TurretHeightAboveIsland;
+                Vector3 tPos = new Vector3(candidate.x + horizontalOffset.x, turretBaseHeight + TurretExtraRaise, candidate.z + horizontalOffset.z);
                 Instantiate(zone.TurretPrefab, tPos, Quaternion.identity, island.transform);
             }
         }
+    }
+
+    Bounds CalculateIslandBounds(GameObject island, Vector3 fallbackCenter)
+    {
+        Renderer[] renderers = island.GetComponentsInChildren<Renderer>();
+        if (renderers.Length > 0)
+        {
+            Bounds bounds = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++)
+                bounds.Encapsulate(renderers[i].bounds);
+            return bounds;
+        }
+
+        Collider[] colliders = island.GetComponentsInChildren<Collider>();
+        if (colliders.Length > 0)
+        {
+            Bounds bounds = colliders[0].bounds;
+            for (int i = 1; i < colliders.Length; i++)
+                bounds.Encapsulate(colliders[i].bounds);
+            return bounds;
+        }
+
+        return new Bounds(fallbackCenter, new Vector3(10f, 2f, 10f));
     }
 }
