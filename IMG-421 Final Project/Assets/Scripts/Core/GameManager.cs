@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 // Central singleton that owns top-level game state and coordinates major systems.
 public class GameManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Win / Lose")]
     public GameObject CentralStronghold;
+    public float ReturnToMenuDelay = 3f;
 
     public enum GameState { Playing, Won, Lost, Paused }
     public GameState CurrentState { get; private set; } = GameState.Playing;
@@ -26,6 +28,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject); 
             return; 
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -44,17 +47,35 @@ public class GameManager : MonoBehaviour
     public void OnStrongholdDestroyed()
     {
         if (CurrentState != GameState.Playing) return;
+
         CurrentState = GameState.Won;
         UIManager.Instance?.ShowWinScreen();
+
         Debug.Log("IronTide: Player Won!");
+
+        StartCoroutine(ReturnToMainMenuAfterDelay());
     }
 
     public void OnPlayerFleetDestroyed()
     {
         if (CurrentState != GameState.Playing) return;
+
         CurrentState = GameState.Lost;
         UIManager.Instance?.ShowLoseScreen();
+
         Debug.Log("IronTide: Player Lost!");
+
+        StartCoroutine(ReturnToMainMenuAfterDelay());
+    }
+
+    private IEnumerator ReturnToMainMenuAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(ReturnToMenuDelay);
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+
+        Destroy(gameObject);
     }
 
     // Pause
@@ -71,6 +92,14 @@ public class GameManager : MonoBehaviour
             CurrentState = GameState.Playing;
             Time.timeScale = 1f;
         }
+    }
+
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+
+        Destroy(gameObject);
     }
 
     // Restart

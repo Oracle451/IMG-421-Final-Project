@@ -24,7 +24,12 @@ public class InputManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(gameObject); 
+            return; 
+        }
+
         Instance = this;
     }
 
@@ -38,8 +43,13 @@ public class InputManager : MonoBehaviour
         LeftClickDown = Input.GetMouseButtonDown(0);
         ScrollDelta = Input.GetAxis("Mouse ScrollWheel");
 
-        // Pause toggle
-        if (PausePressed) GameManager.Instance?.TogglePause();
+        // ESC now returns directly to main menu during gameplay
+        if (PausePressed)
+        {
+            GameManager.Instance?.ReturnToMainMenu();
+            return;
+        }
+
         if (ToggleShopPressed) UIManager.Instance?.ToggleShop();
         if (DeselectPressed) GameManager.Instance?.PlayerFleet?.DeselectShip();
     }

@@ -22,6 +22,7 @@ public class OceanBase : MonoBehaviour, IDamageable
     public GameObject DefenderPrefab;
     public int DefenderCount = 3;
     public float DefenderSpawnRadius = 12f;
+    public float DefenderOrbitRadius = 22f;
 
     [Header("VFX")]
     public GameObject ExplosionVFX;
@@ -137,12 +138,22 @@ public class OceanBase : MonoBehaviour, IDamageable
 
         for (int i = 0; i < DefenderCount; i++)
         {
-            float angle  = (360f / DefenderCount) * i * Mathf.Deg2Rad;
-            Vector3 pos  = transform.position
-                           + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle))
-                           * DefenderSpawnRadius;
+            float angle = (360f / DefenderCount) * i * Mathf.Deg2Rad;
 
-            GameObject go = Instantiate(DefenderPrefab, pos, Quaternion.identity);
+            Vector3 direction = new Vector3(
+                Mathf.Cos(angle),
+                0f,
+                Mathf.Sin(angle)
+            );
+
+            Vector3 pos = transform.position + direction * DefenderSpawnRadius;
+
+            GameObject go = Instantiate(
+                DefenderPrefab,
+                pos,
+                Quaternion.LookRotation(direction)
+            );
+
             ShipBase ship = go.GetComponent<ShipBase>();
             if (ship != null)
             {
@@ -155,6 +166,10 @@ public class OceanBase : MonoBehaviour, IDamageable
             {
                 ai.DefenseAnchor = transform;
                 ai.InitialState = EnemyShipAI.AIState.Defense;
+
+                // Uses the AI field that already exists in your project.
+                // This gives defenders a wider area around the base instead of collapsing into it.
+                ai.PatrolRadius = DefenderOrbitRadius;
             }
         }
     }
@@ -267,5 +282,8 @@ public class OceanBase : MonoBehaviour, IDamageable
     {
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, DefenderSpawnRadius);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, DefenderOrbitRadius);
     }
 }
