@@ -12,12 +12,14 @@ public class UpgradeSystem : MonoBehaviour
         Instance = this;
     }
 
-    // Public Upgrade Methods
     public void UpgradeCannons(ShipBase ship)
     {
+        if (ship == null || ship.Stats == null) return;
+
         if (!ship.CanUpgradeCannons)
         {
             Debug.Log($"{ship.ShipName}: Cannon upgrades maxed.");
+            UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
@@ -26,6 +28,7 @@ public class UpgradeSystem : MonoBehaviour
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
             Debug.Log("Not enough gold!");
+            UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
@@ -36,9 +39,12 @@ public class UpgradeSystem : MonoBehaviour
 
     public void UpgradeSpeed(ShipBase ship)
     {
+        if (ship == null || ship.Stats == null) return;
+
         if (!ship.CanUpgradeSpeed)
         {
             Debug.Log($"{ship.ShipName}: Speed upgrades maxed.");
+            UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
@@ -47,6 +53,7 @@ public class UpgradeSystem : MonoBehaviour
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
             Debug.Log("Not enough gold!");
+            UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
@@ -56,9 +63,12 @@ public class UpgradeSystem : MonoBehaviour
 
     public void UpgradeArmor(ShipBase ship)
     {
+        if (ship == null || ship.Stats == null) return;
+
         if (!ship.CanUpgradeArmor)
         {
             Debug.Log($"{ship.ShipName}: Armor upgrades maxed.");
+            UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
@@ -67,6 +77,7 @@ public class UpgradeSystem : MonoBehaviour
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
             Debug.Log("Not enough gold!");
+            UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
         
@@ -74,32 +85,10 @@ public class UpgradeSystem : MonoBehaviour
         RefreshPanel(ship);
     }
 
-    // Ship Purchase
-
-    public void PurchaseShip(ShipClass cls)
+    void RefreshPanel(ShipBase ship)
     {
-        PlayerFleet fleet = GameManager.Instance.PlayerFleet;
-        ShipStats stats = GetStatsForClass(cls);
-        if (stats == null) return;
-
-        if (!CurrencyManager.Instance.SpendCurrency(stats.PurchaseCost))
-        {
-            Debug.Log("Not enough gold to purchase ship!");
-            return;
-        }
-
-        Vector3 spawnPos = fleet.FleetCenter() + Random.insideUnitSphere.With(y: 0) * 10f;
-        fleet.SpawnShip(cls, spawnPos);
+        UIManager.Instance?.ShowShipPanel(ship);
+        if (CurrencyManager.Instance != null)
+            UIManager.Instance?.UpdateCurrency(CurrencyManager.Instance.CurrentGold);
     }
-
-    // Helpers
-
-    ShipStats GetStatsForClass(ShipClass cls)
-    {
-        // Find a ship with the matching class in the player fleet as reference
-        foreach (ShipBase s in GameManager.Instance.PlayerFleet.Ships) if (s.Stats.ShipClass == cls) return s.Stats;
-        return null;
-    }
-
-    void RefreshPanel(ShipBase ship) => UIManager.Instance?.ShowShipPanel(ship);
 }
