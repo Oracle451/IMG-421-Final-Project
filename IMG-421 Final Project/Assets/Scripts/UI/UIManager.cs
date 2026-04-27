@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
         if (controller == null)
             controller = ShopPanel.AddComponent<ShopController>();
 
-        controller.AutoBindFromHierarchy();
+        
     }
 
     // HUD Updates
