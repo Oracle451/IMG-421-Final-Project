@@ -147,7 +147,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Lifetime: 6
-  HitVFX: {fileID: 0}
+  StructureAssistRadius: 1.5
+  HitVFX: {fileID: 7880794598796608280, guid: a7ff35e97459f544986090de58a01f92, type: 3}
   SplashVFX: {fileID: 0}
-  HitMetallicSFX: {fileID: 0}
-  SplashSFX: {fileID: 0}
+  HitMetallicSFX: {fileID: 8300000, guid: c4599a0ec82be6a4e9092908ec3a2d24, type: 3}
+  SplashSFX: {fileID: 8300000, guid: c41eec71fb96d9343aebacbbb476fd99, type: 3}
