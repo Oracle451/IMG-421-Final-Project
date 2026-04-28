@@ -756,7 +756,7 @@ MonoBehaviour:
   Wave2Frequency: 0.5
   Wave2Speed: 0.1
   Wave2Direction: 45
-  WaterColor: {r: 0, g: 0.3, b: 0.6, a: 1}
+  WaterColor: {r: 0.06354563, g: 0.4037486, b: 0.7484276, a: 1}
 --- !u!64 &85091393
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4125,7 +4125,7 @@ GameObject:
   - component: {fileID: 999023584}
   - component: {fileID: 999023583}
   m_Layer: 5
-  m_Name: Instructions
+  m_Name: Controls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4171,8 +4171,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "(RIGHT-CLICK) Sends fleet to mouse-click position. \n(ESCAPE) Return to
-    Menu\n(SPACE) Zoom Out\n(B) Toggle Shop\n(Q) Deselect\n(C) Toggle Controls /
-    Instruction Panel\n\n"
+    Menu\n(SPACE) Zoom Out\n(B) Toggle Shop\n(Q) Deselect Current Ship\n(C) Toggle
+    Controls / Instruction Panel\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
