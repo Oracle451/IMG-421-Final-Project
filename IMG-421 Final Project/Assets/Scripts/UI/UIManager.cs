@@ -31,6 +31,10 @@ public class UIManager : MonoBehaviour
     [Header("Ship Purchase Panel")]
     public GameObject ShopPanel;
 
+    [Header("Game Controls / Instructions")]
+    public GameObject ControlsPanel;
+    public Button OkButton;
+
     private ShipBase _selectedShip;
 
     void Awake()
@@ -222,5 +226,13 @@ public class UIManager : MonoBehaviour
 
         ShopController shop = ShopPanel.GetComponent<ShopController>();
         shop?.RefreshShopUI();
+    }
+
+    // controls / instructions panel
+    public void  ToggleControlsPanel()
+    {
+        if (ControlsPanel == null) return;
+
+        ControlsPanel.SetActive(!ControlsPanel.activeSelf);
     }
 }
