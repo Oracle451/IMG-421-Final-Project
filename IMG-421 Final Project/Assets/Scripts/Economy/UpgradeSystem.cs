@@ -1,7 +1,5 @@
 using UnityEngine;
 
-// Central system for upgrading ship stats.
-// Called by UIManager button callbacks.
 public class UpgradeSystem : MonoBehaviour
 {
     public static UpgradeSystem Instance { get; private set; }
@@ -18,7 +16,7 @@ public class UpgradeSystem : MonoBehaviour
 
         if (!ship.CanUpgradeCannons)
         {
-            Debug.Log($"{ship.ShipName}: Cannon upgrades maxed.");
+            HUDManager.Instance?.ShowMessage($"{ship.ShipName}: Cannons already at max!", isWarning: true);
             UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
@@ -27,13 +25,14 @@ public class UpgradeSystem : MonoBehaviour
 
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
-            Debug.Log("Not enough gold!");
+            HUDManager.Instance?.ShowNotEnoughCoinsMessage(cost);
             UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
         ship.ApplyCannonUpgrade();
         RefreshPanel(ship);
+        HUDManager.Instance?.ShowUpgradeMessage(ship.ShipName, "Cannons", ship.CannonUpgradeLevel);
         Debug.Log($"{ship.ShipName} cannon upgraded to level {ship.CannonUpgradeLevel}");
     }
 
@@ -43,7 +42,7 @@ public class UpgradeSystem : MonoBehaviour
 
         if (!ship.CanUpgradeSpeed)
         {
-            Debug.Log($"{ship.ShipName}: Speed upgrades maxed.");
+            HUDManager.Instance?.ShowMessage($"{ship.ShipName}: Speed already at max!", isWarning: true);
             UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
@@ -52,13 +51,15 @@ public class UpgradeSystem : MonoBehaviour
 
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
-            Debug.Log("Not enough gold!");
+            HUDManager.Instance?.ShowNotEnoughCoinsMessage(cost);
             UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
 
         ship.ApplySpeedUpgrade();
         RefreshPanel(ship);
+        HUDManager.Instance?.ShowUpgradeMessage(ship.ShipName, "Speed", ship.SpeedUpgradeLevel);
+        Debug.Log($"{ship.ShipName} speed upgraded to level {ship.SpeedUpgradeLevel}");
     }
 
     public void UpgradeArmor(ShipBase ship)
@@ -67,7 +68,7 @@ public class UpgradeSystem : MonoBehaviour
 
         if (!ship.CanUpgradeArmor)
         {
-            Debug.Log($"{ship.ShipName}: Armor upgrades maxed.");
+            HUDManager.Instance?.ShowMessage($"{ship.ShipName}: Armor already at max!", isWarning: true);
             UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
@@ -76,13 +77,15 @@ public class UpgradeSystem : MonoBehaviour
         
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
-            Debug.Log("Not enough gold!");
+            HUDManager.Instance?.ShowNotEnoughCoinsMessage(cost);
             UIManager.Instance?.ShowShipPanel(ship);
             return;
         }
         
         ship.ApplyArmorUpgrade();
         RefreshPanel(ship);
+        HUDManager.Instance?.ShowUpgradeMessage(ship.ShipName, "Armor", ship.ArmorUpgradeLevel);
+        Debug.Log($"{ship.ShipName} armor upgraded to level {ship.ArmorUpgradeLevel}");
     }
 
     void RefreshPanel(ShipBase ship)
