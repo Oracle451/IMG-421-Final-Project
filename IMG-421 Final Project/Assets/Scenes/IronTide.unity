@@ -4170,9 +4170,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "(RIGHT-CLICK) Sends fleet to mouse-click position. \n(ESCAPE) Return to
-    Menu\n(SPACE) Zoom Out\n(B) Toggle Shop\n(Q) Deselect Current Ship\n(C) Toggle
-    Controls / Instruction Panel\n\n"
+  m_text: "(RIGHT-CLICK) Sends fleet to mouse-click position. \n(LEFT-CLICK) Select
+    Ship\n(Q) Deselect  Ship\n(B) Toggle Shop\n(C) Toggle Controls / Instruction
+    Panel\n(SPACE) Zoom Camera Out\n(ESCAPE) Return to Menu\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
