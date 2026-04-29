@@ -13,7 +13,6 @@ public class ShopController : MonoBehaviour
 
     void Start()
     {
-        // Grab ALL buttons under this shop
         buyButtons = GetComponentsInChildren<Button>(true);
 
         if (buyButtons.Length < 3)
@@ -22,11 +21,9 @@ public class ShopController : MonoBehaviour
             return;
         }
 
-        // Clear existing listeners
         foreach (Button btn in buyButtons)
             btn.onClick.RemoveAllListeners();
 
-        // Assign based on order in hierarchy
         buyButtons[0].onClick.AddListener(BuySchooner);
         buyButtons[1].onClick.AddListener(BuyFrigate);
         buyButtons[2].onClick.AddListener(BuyManOWar);
@@ -73,7 +70,7 @@ public class ShopController : MonoBehaviour
 
         if (!CurrencyManager.Instance.SpendCurrency(cost))
         {
-            Debug.Log("Not enough gold");
+            HUDManager.Instance?.ShowNotEnoughCoinsMessage(cost);
             return;
         }
 
@@ -84,15 +81,17 @@ public class ShopController : MonoBehaviour
         if (newShip == null)
         {
             CurrencyManager.Instance.AddCurrency(cost);
-            Debug.LogError("Spawn failed, refunded");
+            HUDManager.Instance?.ShowMessage("Ship spawn failed! Refunded.", isWarning: true);
             return;
         }
 
+        HUDManager.Instance?.ShowPurchaseMessage(shipClass.ToString(), cost);
         Debug.Log("Purchased " + shipClass);
     }
+
     public void RefreshShopUI()
-{
-    // Kept because UIManager calls this.
-    // Button purchasing still works without UI text updates here.
-}
+    {
+        // Kept because UIManager calls this.
+        // Button purchasing still works without UI text updates here.
+    }
 }
