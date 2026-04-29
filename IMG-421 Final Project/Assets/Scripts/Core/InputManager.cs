@@ -11,12 +11,14 @@ public class InputManager : MonoBehaviour
     public KeyCode ZoomOutKey = KeyCode.Space;
     public KeyCode ToggleShopKey = KeyCode.B;
     public KeyCode DeselectKey = KeyCode.Q;
+    public KeyCode ToggleControlsKey = KeyCode.C;
 
     // ── Cached per-frame state ────────────────────────────────────────────────
     public bool PausePressed { get; private set; }
     public bool ZoomOutHeld { get; private set; }
     public bool ToggleShopPressed { get; private set; }
     public bool DeselectPressed { get; private set; }
+    public bool ToggleControlsPressed { get; private set; }
     public bool RightClickDown { get; private set; }
     public bool LeftClickDown { get; private set; }
     public float ScrollDelta { get; private set; }
@@ -39,6 +41,7 @@ public class InputManager : MonoBehaviour
         ZoomOutHeld = Input.GetKey(ZoomOutKey);
         ToggleShopPressed = Input.GetKeyDown(ToggleShopKey);
         DeselectPressed = Input.GetKeyDown(DeselectKey);
+        ToggleControlsPressed = Input.GetKeyDown(ToggleControlsKey);
         RightClickDown = Input.GetMouseButtonDown(1);
         LeftClickDown = Input.GetMouseButtonDown(0);
         ScrollDelta = Input.GetAxis("Mouse ScrollWheel");
@@ -52,5 +55,6 @@ public class InputManager : MonoBehaviour
 
         if (ToggleShopPressed) UIManager.Instance?.ToggleShop();
         if (DeselectPressed) GameManager.Instance?.PlayerFleet?.DeselectShip();
+        if (ToggleControlsPressed) UIManager.Instance?.ToggleControlsPanel();
     }
 }

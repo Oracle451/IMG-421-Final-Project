@@ -66,8 +66,12 @@ MonoBehaviour:
   DefenderPrefab: {fileID: 8257483789311396215, guid: 8beeca1f889894c448da78862708fa1f, type: 3}
   DefenderCount: 3
   DefenderSpawnRadius: 12
+  DefenderOrbitRadius: 22
   ExplosionVFX: {fileID: 7880794598796608280, guid: 23451a4af45075b47bb2caf286211aee, type: 3}
-  SinkingVFX: {fileID: 0}
+  SinkingVFX: {fileID: 6609782171678623771, guid: 55bbb1c9ce1e31b4ebee4bcb8ca12d85, type: 3}
+  ShowHealthBar: 1
+  HealthBarLocalOffset: {x: 0, y: 3.2, z: 0}
+  HealthBarSize: {x: 120, y: 14}
 --- !u!114 &7495813821091759578
 MonoBehaviour:
   m_ObjectHideFlags: 0
